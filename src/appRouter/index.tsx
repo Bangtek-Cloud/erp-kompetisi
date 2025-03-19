@@ -45,13 +45,13 @@ export default function AppRouter() {
                         <Route path="donors" element={<DonorsPage />} />
                         <Route path="*" element={<Navigate to="/apps/finance/home" />} />
                     </Route>
-                    <Route path="*" element={<Navigate to="/apps" />} />
+                    <Route path="*" element={<Navigate to="/apps/home" />} />
                 </Route>
                 <Route path="auth" element={<AuthLayout />}>
                     <Route index element={<Navigate to="/auth/login" />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<h1>Register under development</h1>} />
-                    <Route path="*" element={<Navigate to="/auth" />} />
+                    <Route path="*" element={<Navigate to="/auth/login" />} />
                 </Route>
             </Routes>
         </BrowserRouter >
