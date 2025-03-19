@@ -24,6 +24,7 @@ export default function AppRouter() {
             <Routes>
                 <Route path="/" element={<LandingLayout />}>
                     <Route index element={<LandingHome />} />
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Route>
                 <Route path="apps" element={<AppsLayout />}>
                     <Route index element={<Navigate to="/apps/home" />} />
@@ -42,12 +43,15 @@ export default function AppRouter() {
                         <Route path="reports" element={<FinancialReportsPage />} />
                         <Route path="public" element={<PublicFinancePage />} />
                         <Route path="donors" element={<DonorsPage />} />
+                        <Route path="*" element={<Navigate to="/apps/finance/home" />} />
                     </Route>
+                    <Route path="*" element={<Navigate to="/apps" />} />
                 </Route>
                 <Route path="auth" element={<AuthLayout />}>
                     <Route index element={<Navigate to="/auth/login" />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<h1>Register under development</h1>} />
+                    <Route path="*" element={<Navigate to="/auth" />} />
                 </Route>
             </Routes>
         </BrowserRouter >
