@@ -8,7 +8,7 @@ import { Search, Plus, Filter, Download } from "lucide-react"
 
 export default function TechniciansPage() {
   return (
-      <main className="flex-1 container p-8">
+      <main className="flex-1 container mx-auto p-8">
         <div className="flex md:flex-row gap-4 flex-col justify-between md:items-center mb-8">
           <h1 className="text-3xl font-bold text-left">Technicians</h1>
           <div className="flex gap-2">

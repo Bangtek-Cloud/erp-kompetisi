@@ -6,7 +6,7 @@ import { DollarSign, Download, FileText, PieChart, BarChart2 } from "lucide-reac
 export default function PublicFinancePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 container p-8">
+      <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Transparent Financial Reporting</h1>

@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function FinancialReportsPage() {
     return (
         <div className="flex flex-col min-h-screen">
-            <main className="flex-1 container p-8">
+            <main className="flex-1 container mx-auto p-8">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">Financial Reports</h1>
                     <div className="flex gap-2">

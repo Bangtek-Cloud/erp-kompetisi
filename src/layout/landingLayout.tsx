@@ -5,8 +5,8 @@ import { Outlet } from "react-router";
 export default function LandingLayout() {
     return (
         <div className={cn("min-h-screen bg-background")}>
-            <Navbar/>
+            <Navbar />
             <Outlet />
         </div>
     )
-  } 
+} 

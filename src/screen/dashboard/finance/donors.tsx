@@ -8,7 +8,7 @@ import { Search, Plus, Filter, Download, DollarSign } from "lucide-react"
 export default function DonorsPage() {
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex-1 container p-8">
+      <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Donors & Sponsors</h1>
           <div className="flex gap-2">

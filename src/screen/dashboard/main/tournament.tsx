@@ -6,7 +6,7 @@ import { Search, Filter, Plus, Calendar, Users, MapPin } from "lucide-react"
 
 export default function TournamentsPage() {
   return (
-      <main className="flex-1 container p-8">
+      <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Tournaments</h1>
           <Button>

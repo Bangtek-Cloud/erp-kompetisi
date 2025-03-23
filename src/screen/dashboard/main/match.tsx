@@ -8,7 +8,7 @@ import { Search, Filter, Plus } from "lucide-react"
 
 export default function MatchesPage() {
   return (
-    <div className="container p-8">
+    <div className="container mx-auto p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">1vs1 Matches</h1>
         <Button>

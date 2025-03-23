@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 export default function SchedulePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-1 container p-8">
+      <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Competition Schedule</h1>
           <div className="flex gap-2">

@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 export const HeroSection = () => {
     return (
-        <section className="container w-full">
+        <section className="container mx-auto w-full">
             <div className="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto pt-8">
                 <div className="text-center space-y-8">
                     <Badge variant="outline" className="text-sm py-2">
