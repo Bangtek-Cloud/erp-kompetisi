@@ -130,6 +130,7 @@ import {
 import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
 import { NavSecondary } from "./nav-secondary"
+import { Link } from "react-router"
 
 // const menuItems = [
 //   {
@@ -262,10 +263,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <Link to="/apps/home">
                 <ArrowUpCircleIcon className="h-5 w-5" />
                 <span className="text-base font-semibold">Bangtek.</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
