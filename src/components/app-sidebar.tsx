@@ -127,6 +127,12 @@ import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
 import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router"
+import { IUser } from "@/types/user"
+
+interface sidebarProps {
+  user: IUser | null,
+  logout: () => void
+}
 
 const data = {
   user: {
@@ -214,9 +220,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar(props: sidebarProps) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas">
       <SidebarHeader  className="bg-background">
         <SidebarMenu  className="bg-background">
           <SidebarMenuItem  className="bg-background">
@@ -239,7 +245,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter className="bg-background">
-        <NavUser user={data.user} />
+        <NavUser user={props.user} logout={props.logout} />
       </SidebarFooter>
     </Sidebar>
   )

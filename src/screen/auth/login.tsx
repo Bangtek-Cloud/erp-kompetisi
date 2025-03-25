@@ -1,61 +1,96 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ArrowRight } from "lucide-react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { userLoginSchema } from "@/types/input/auth"
+import { zodResolver } from "@hookform/resolvers/zod"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { toast } from "sonner"
+import { loginUser } from "@/services/auth"
+import { useDispatch } from "react-redux"
+import { loginSuccess } from "@/store/feature/authSlice"
 
-export default function LoginPage({
-    className,
-    ...props
-}: React.ComponentPropsWithoutRef<"form">) {
+export default function LoginPage() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const form = useForm<z.infer<typeof userLoginSchema>>({
+        resolver: zodResolver(userLoginSchema),
+        defaultValues: {
+            email: "",
+            password: "",
+        }
+    })
+
+    async function onSubmit(values: z.infer<typeof userLoginSchema>) {
+        try {
+            const data = await loginUser(values.email, values.password)
+            dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
+            navigate('/apps')
+        } catch (e) {
+            if (e instanceof Error) {
+                toast.error(e.message)
+            } else {
+                toast.error('Terjadi kesalahan')
+            }
+        }
+    }
+
     return (
-        <form className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className={cn("flex flex-col gap-6")}>
             <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Login to your account</h1>
+                <h1 className="text-2xl font-bold">Masuk ke akun</h1>
                 <p className="text-balance text-sm text-muted-foreground">
-                    Enter your email below to login to your account
+                    Masukkan email dan kata sandi Anda untuk melanjutkan
                 </p>
             </div>
             <div className="grid gap-6">
-                <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="m@example.com" required />
-                </div>
-                <div className="grid gap-2">
-                    <div className="flex items-center">
-                        <Label htmlFor="password">Password</Label>
-                        <a
-                            href="#"
-                            className="ml-auto text-sm underline-offset-4 hover:underline"
-                        >
-                            Forgot your password?
-                        </a>
-                    </div>
-                    <Input id="password" type="password" required />
-                </div>
-                <Button type="submit" className="w-full">
-                    Login
-                </Button>
-                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-                    <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                        Or continue with
-                    </span>
-                </div>
-                <Link to="/apps">
-                    <Button variant={'destructive'} className="w-full">
-                        <ArrowRight className="mr-2" />
-                        Bypass langsung ke dashboard
-                        <ArrowRight className="mr-2" />
-                    </Button>
-                </Link>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="kepsn@example.com" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="*******" type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit" className="w-full">Submit</Button>
+                    </form>
+                </Form>
             </div>
             <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
-                    Sign up
-                </a>
+                Belum punya akun?{" "}
+                <Link to="/auth/register" className="underline underline-offset-4">
+                    Daftar sekarang
+                </Link>
             </div>
-        </form>
+        </div>
     )
 }

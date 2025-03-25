@@ -17,6 +17,8 @@ import ReportsPage from "@/screen/dashboard/management/report";
 import AuthLayout from "@/layout/authLayout";
 import LoginPage from "@/screen/auth/login";
 import LandingLayout from "@/layout/landingLayout";
+import ProtectedRoute from "@/components/protectedRoute";
+import RedirectRoute from "@/components/redirectRoute";
 
 export default function AppRouter() {
     return (
@@ -26,34 +28,43 @@ export default function AppRouter() {
                     <Route index element={<LandingHome />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Route>
-                <Route path="apps" element={<AppsLayout />}>
-                    <Route index element={<Navigate to="/apps/home" />} />
-                    <Route path="home" element={<DashboardIndex />} />
-                    <Route path="match" element={<MatchesPage />} />
-                    <Route path="tournament" element={<TournamentsPage />} />
-                    <Route path="technician" element={<TechniciansPage />} />
-                    <Route path="schedule" element={<SchedulePage />} />
-                    <Route path="leaderboard" element={<LeaderboardPage />} />
-                    <Route path="reports" element={<ReportsPage />} />
-                    <Route path="settings" element={<AccountSettings />} />
-                    <Route path="finance">
-                        <Route index element={<Navigate to="/apps/finance/home" />} />
-                        <Route path="home" element={<FinancePage />} />
-                        <Route path="transactions" element={<TransactionsPage />} />
-                        <Route path="reports" element={<FinancialReportsPage />} />
-                        <Route path="public" element={<PublicFinancePage />} />
-                        <Route path="donors" element={<DonorsPage />} />
-                        <Route path="*" element={<Navigate to="/apps/finance/home" />} />
+
+                <Route element={<RedirectRoute />}>
+                    <Route path="auth" element={<AuthLayout />}>
+                        <Route index element={<Navigate to="/auth/login" />} />
+                        <Route path="login" element={<LoginPage />} />
+                        <Route path="register" element={<h1>Register under development</h1>} />
+                        <Route path="*" element={<Navigate to="/auth/login" />} />
                     </Route>
-                    <Route path="*" element={<Navigate to="/apps/home" />} />
                 </Route>
-                <Route path="auth" element={<AuthLayout />}>
-                    <Route index element={<Navigate to="/auth/login" />} />
-                    <Route path="login" element={<LoginPage />} />
-                    <Route path="register" element={<h1>Register under development</h1>} />
-                    <Route path="*" element={<Navigate to="/auth/login" />} />
+
+                {/* Protected Routes */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="apps" element={<AppsLayout />}>
+                        <Route index element={<Navigate to="/apps/home" />} />
+                        <Route path="home" element={<DashboardIndex />} />
+                        <Route path="match" element={<MatchesPage />} />
+                        <Route path="tournament" element={<TournamentsPage />} />
+                        <Route path="technician" element={<TechniciansPage />} />
+                        <Route path="schedule" element={<SchedulePage />} />
+                        <Route path="leaderboard" element={<LeaderboardPage />} />
+                        <Route path="reports" element={<ReportsPage />} />
+                        <Route path="settings" element={<AccountSettings />} />
+
+                        <Route path="finance">
+                            <Route index element={<Navigate to="/apps/finance/home" />} />
+                            <Route path="home" element={<FinancePage />} />
+                            <Route path="transactions" element={<TransactionsPage />} />
+                            <Route path="reports" element={<FinancialReportsPage />} />
+                            <Route path="public" element={<PublicFinancePage />} />
+                            <Route path="donors" element={<DonorsPage />} />
+                            <Route path="*" element={<Navigate to="/apps/finance/home" />} />
+                        </Route>
+
+                        <Route path="*" element={<Navigate to="/apps/home" />} />
+                    </Route>
                 </Route>
             </Routes>
-        </BrowserRouter >
-    )
+        </BrowserRouter>
+    );
 }
