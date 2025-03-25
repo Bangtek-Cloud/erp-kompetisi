@@ -113,11 +113,7 @@ import {
   Trophy,
   User,
 } from "lucide-react"
-
-// import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
-// import { NavSecondary } from "@/components/nav-secondary"
-// import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -132,41 +128,6 @@ import { NavUser } from "./nav-user"
 import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router"
 
-// const menuItems = [
-//   {
-//     label: "Main",
-//     items: [
-//       { label: "Dashboard", icon: Home, path: "/apps" },
-//       { label: "Matches", icon: Swords, path: "/apps/match" },
-//       { label: "Tournaments", icon: Trophy, path: "/apps/tournament" },
-//       { label: "Technicians", icon: Users, path: "/apps/technician" },
-//       { label: "Schedule", icon: Calendar, path: "/apps/schedule" },
-//     ],
-//   },
-//   {
-//     label: "Finance",
-//     items: [
-//       { label: "Financial Dashboard", icon: DollarSign, path: "/apps/finance/home" },
-//       { label: "Transactions", icon: CreditCard, path: "/apps/finance/transactions" },
-//       { label: "Financial Reports", icon: FileText, path: "/apps/finance/reports" },
-//       { label: "Public Reports", icon: FileText, path: "/apps/finance/public" },
-//       { label: "Donors & Sponsors", icon: DollarSign, path: "/apps/finance/donors" },
-//     ],
-//   },
-//   {
-//     label: "Management",
-//     items: [
-//       { label: "Leaderboard", icon: Medal, path: "/apps/leaderboard" },
-//       { label: "Reports", icon: BarChart2, path: "/apps/reports" },
-//     ],
-//   },
-//   {
-//     label: "Settings",
-//     items: [
-//       { label: "Settings", icon: Settings, path: "/apps/settings" },
-//     ],
-//   },
-// ]
 const data = {
   user: {
     name: "Kevin Doe",
