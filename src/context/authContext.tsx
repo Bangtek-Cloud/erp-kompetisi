@@ -1,7 +1,7 @@
-import { fetchUser, refreshToken } from "@/services/auth";
+import { refreshToken } from "@/services/auth";
 import { RootState } from "@/store";
-import { loginSuccess, logout, setUser } from "@/store/feature/authSlice";
-import { createContext, useEffect, ReactNode } from "react";
+import { loginSuccess, logout } from "@/store/feature/authSlice";
+import { createContext, ReactNode } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface AuthContextType {
@@ -12,7 +12,6 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const refreshTokenState = useSelector((state: RootState) => state.auth.refreshToken);
 
   const refresh = async () => {
