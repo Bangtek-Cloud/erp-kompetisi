@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Link, useNavigate } from "react-router"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { userLoginSchema } from "@/types/input/auth"
+import { registerUserSchema } from "@/types/input/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
     Form,
@@ -15,24 +15,30 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { toast } from "sonner"
-import { loginUser } from "@/services/auth"
+import { RegisterUser } from "@/services/auth"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "@/store/feature/authSlice"
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const form = useForm<z.infer<typeof userLoginSchema>>({
-        resolver: zodResolver(userLoginSchema),
+    const form = useForm<z.infer<typeof registerUserSchema>>({
+        resolver: zodResolver(registerUserSchema),
         defaultValues: {
+            name: '',
             email: "",
             password: "",
+            confirmPassword: "",
         }
     })
 
-    async function onSubmit(values: z.infer<typeof userLoginSchema>) {
+    async function onSubmit(values: z.infer<typeof registerUserSchema>) {
+        if(values.password !== values.confirmPassword) {
+            toast.error('Password tidak sama')
+        }
+
         try {
-            const data = await loginUser(values.email, values.password)
+            const data = await RegisterUser(values.name, values.email, values.password)
             dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
             navigate('/apps')
         } catch (e) {
@@ -47,14 +53,28 @@ export default function LoginPage() {
     return (
         <div className={cn("flex flex-col gap-6")}>
             <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Masuk ke akun</h1>
+                <h1 className="text-2xl font-bold">Selamat datang kembali</h1>
                 <p className="text-balance text-sm text-muted-foreground">
-                    Masukkan email dan kata sandi Anda untuk melanjutkan
+                    Sebelum melanjutkan silahkan daftar terlebih dahulu.
                 </p>
             </div>
             <div className="grid gap-6">
                 <Form {...form}>
+                
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nama Lengkap</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="kep Doe" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="email"
@@ -62,7 +82,7 @@ export default function LoginPage() {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="kepsn@example.com" {...field} />
+                                        <Input placeholder="keps@example.com" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -81,14 +101,27 @@ export default function LoginPage() {
                                 </FormItem>
                             )}
                         />
+                         <FormField
+                            control={form.control}
+                            name="confirmPassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Masukan ulang password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="*******" type="password" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <Button type="submit" className="w-full">Submit</Button>
                     </form>
                 </Form>
             </div>
             <div className="text-center text-sm">
-                Belum punya akun?{" "}
-                <Link to="/auth/register" className="underline underline-offset-4">
-                    Daftar sekarang
+                Sudah punya akun ?{" "}
+                <Link to="/auth" className="underline underline-offset-4">
+                    Masuk disini
                 </Link>
             </div>
         </div>
