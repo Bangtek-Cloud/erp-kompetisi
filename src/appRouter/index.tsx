@@ -19,6 +19,7 @@ import LoginPage from "@/screen/auth/login";
 import LandingLayout from "@/layout/landingLayout";
 import ProtectedRoute from "@/components/protectedRoute";
 import RedirectRoute from "@/components/redirectRoute";
+import RegisterPage from "@/screen/auth/register";
 
 export default function AppRouter() {
     return (
@@ -30,10 +31,10 @@ export default function AppRouter() {
                 </Route>
 
                 <Route element={<RedirectRoute />}>
-                    <Route path="auth" element={<AuthLayout />}>
+                    <Route path="auth" element={<AuthLayout />} errorElement={<h1>Terjadi kesalahan</h1>}>
                         <Route index element={<Navigate to="/auth/login" />} />
                         <Route path="login" element={<LoginPage />} />
-                        <Route path="register" element={<h1>Register under development</h1>} />
+                        <Route path="register" element={<RegisterPage />} />
                         <Route path="*" element={<Navigate to="/auth/login" />} />
                     </Route>
                 </Route>

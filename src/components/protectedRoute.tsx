@@ -4,6 +4,7 @@ import { setUser } from "@/store/feature/authSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router";
+import { toast } from "sonner";
 
 
 const ProtectedRoute = () => {
@@ -12,14 +13,19 @@ const ProtectedRoute = () => {
   const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
+    if (!accessToken || user) return;
    const getUser = async () => {
      const user = await fetchUser(accessToken || "");
-     console.log(user)
-     dispatch(setUser(user));
+     if(user.error){
+      toast.error(user.error)
+      return
+    } else {
+       dispatch(setUser(user));
+    }
    }
 
    getUser();
-  }, [accessToken, dispatch, user]);
+  }, [accessToken, dispatch]);
 
   if (!accessToken) {
     return <Navigate to="/auth/login" replace />;

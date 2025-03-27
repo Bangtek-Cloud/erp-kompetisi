@@ -25,14 +25,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  useEffect(() => {
-    if (accessToken) {
-      console.log(accessToken);
-      fetchUser(accessToken)
-        .then((user) => dispatch(setUser(user)))
-        .catch(() => refresh());
-    }
-  }, [accessToken]);
-
   return <AuthContext.Provider value={{ refresh }}>{children}</AuthContext.Provider>;
 };
