@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import genericsInstance from "./generics-client";
+import { ErrorType } from "@/types/errorType";
 
 interface ErrorResponse {
   error: string;
@@ -11,13 +12,13 @@ export const loginUser = async (email: string, password: string) => {
       email,
       password,
     });
-    if(!response){
-      throw new Error("Gagal login user!")
-    }
     return response.data;
   } catch (error) {
-    if(error instanceof Error){
-      throw new Error(error.message)
+    if (error instanceof Error) {
+      const axiosError = error as AxiosError<ErrorType>;
+      return {
+        error: axiosError.response?.data.message,
+      }
     }
   }
 };
@@ -29,12 +30,12 @@ export const fetchUser = async (accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-  
+
     return response.data;
 
   } catch (error) {
-    if(error instanceof Error){
-      const axiosError = error as AxiosError<ErrorResponse>; 
+    if (error instanceof Error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
       return {
         error: axiosError.response?.data.error,
       }
@@ -52,18 +53,19 @@ export const refreshToken = async (token: string) => {
 };
 
 export const RegisterUser = async (name: string, email: string, password: string) => {
-  const response = await fetch(import.meta.env.VITE_BASE_URL_GENERICS+"/user/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ name, email, password }),
-  });
-
-  if (!response.ok) {
-    const res = await response.json()
-    throw new Error(res.message);
+  try {
+    const response = await genericsInstance.post("/user/register", {
+      name,
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      const axiosError = error as AxiosError<ErrorType>;
+      return {
+        error: axiosError.response?.data.message,
+      }
+    }
   }
-
-  return response.json();
 }

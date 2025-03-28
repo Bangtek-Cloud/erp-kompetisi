@@ -33,13 +33,16 @@ export default function LoginPage() {
     async function onSubmit(values: z.infer<typeof userLoginSchema>) {
         try {
             const data = await loginUser(values.email, values.password)
-            dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
-            navigate('/apps')
+            if (data.error) {
+                toast.error(data.error)
+            }
+            else {
+                dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
+                navigate('/apps')
+            }
         } catch (e) {
             if (e instanceof Error) {
                 toast.error(e.message)
-            } else {
-                toast.error('Terjadi kesalahan')
             }
         }
     }
