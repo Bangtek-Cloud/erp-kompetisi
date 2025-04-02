@@ -33,14 +33,18 @@ export default function RegisterPage() {
     })
 
     async function onSubmit(values: z.infer<typeof registerUserSchema>) {
-        if(values.password !== values.confirmPassword) {
+        if (values.password !== values.confirmPassword) {
             toast.error('Password tidak sama')
         }
 
         try {
             const data = await RegisterUser(values.name, values.email, values.password)
+            if (data.error) {
+                toast.error(data.error)
+            }
             dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
             navigate('/apps')
+
         } catch (e) {
             if (e instanceof Error) {
                 toast.error(e.message)
@@ -60,9 +64,9 @@ export default function RegisterPage() {
             </div>
             <div className="grid gap-6">
                 <Form {...form}>
-                
+
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
+                        <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
@@ -101,7 +105,7 @@ export default function RegisterPage() {
                                 </FormItem>
                             )}
                         />
-                         <FormField
+                        <FormField
                             control={form.control}
                             name="confirmPassword"
                             render={({ field }) => (
