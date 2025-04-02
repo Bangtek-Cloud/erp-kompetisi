@@ -1,19 +1,23 @@
-FROM node:20-alpine
+# Gunakan image resmi Bun
+FROM oven/bun:latest
 
+# Set working directory
 WORKDIR /app
 
-COPY package.json /app
+# Copy file package.json dan bun.lockb untuk menginstal dependensi
+COPY package.json bun.lockb ./
 
-COPY bun.lockb /app
+# Install Bun dependencies dan TypeScript secara global
+RUN bun install --production && bun add typescript --global
 
-RUN npm install --global bun
-
+# Copy seluruh aplikasi ke dalam container
 COPY . .
 
+# Build aplikasi TypeScript terlebih dahulu, kemudian Vite
 RUN bun run build
 
-EXPOSE 8080
+# Expose port untuk aplikasi, biasanya Vite di port 3000, sesuaikan jika berbeda
+EXPOSE 3000
 
-ENV ADDRESS=0.0.0.0 PORT=8080
-
+# Start aplikasi menggunakan preview (jika mode produksi)
 CMD ["bun", "run", "preview"]
