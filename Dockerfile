@@ -1,21 +1,19 @@
-# Use the official Bun image
-FROM oven/bun:latest
+FROM node:20-alpine
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json bun.lockb ./
-RUN bun install --production
+COPY package.json /app
 
-# Copy the rest of the application code
+COPY bun.lockb /app
+
+RUN npm install --global bun
+
 COPY . .
 
-# Build the Vite project
 RUN bun run build
 
-# Expose port 8080
 EXPOSE 8080
 
-# Start the production server
+ENV ADDRESS=0.0.0.0 PORT=8080
+
 CMD ["bun", "run", "preview"]
