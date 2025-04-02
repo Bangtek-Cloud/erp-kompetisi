@@ -17,7 +17,7 @@ COPY . .
 RUN bun run build
 
 # Expose port untuk aplikasi, biasanya Vite di port 3000, sesuaikan jika berbeda
-EXPOSE 3000
+EXPOSE 8080
 
 # Start aplikasi menggunakan preview (jika mode produksi)
 CMD ["bun", "run", "preview"]
