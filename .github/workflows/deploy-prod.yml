@@ -38,6 +38,6 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
-            docker-compose down
-            docker-compose up -d --force-recreate
+            docker compose down
+            docker compose up -d --force-recreate
             docker image prune -f
