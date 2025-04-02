@@ -39,4 +39,4 @@ jobs:
             docker stop frontend-erp || true
             sleep 5
             docker rm frontend-erp || true
-            docker run -d --name frontend-erp --rm --restart unless-stopped -p 8080:8080 --network apps-net ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
+            docker run -d --name frontend-erp --restart unless-stopped -p 8080:8080 --network apps-net ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
