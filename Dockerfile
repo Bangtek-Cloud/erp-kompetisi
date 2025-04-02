@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json bun.lockb ./
 
 # Install Bun dependencies dan TypeScript secara global
-RUN bun install --production && bun add typescript --global
+RUN bun install && bun add typescript --global
 
 # Copy seluruh aplikasi ke dalam container
 COPY . .
