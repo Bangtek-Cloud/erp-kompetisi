@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "./auth";
 
 const genericsInstance = axios.create({
-  baseURL: "http://fastify:3000/api/v1",
+  baseURL: "https://api.bangtek.org/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

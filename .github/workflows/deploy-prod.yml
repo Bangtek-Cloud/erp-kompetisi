@@ -29,6 +29,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
 
+
       - name: Deploy with Docker
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -36,7 +37,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            docker stop frontend-erp || true
-            sleep 5
-            docker rm frontend-erp || true
-            docker run -d --name frontend-erp --restart unless-stopped -p 8080:8080 --network apps-net ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
+            cd frontend-erp
+            docker compose down
+            docker compose up -d
