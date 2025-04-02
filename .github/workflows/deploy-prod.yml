@@ -39,6 +39,3 @@ jobs:
           script: |
             cd frontend-erp
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
-            # docker compose down
-            # docker compose up -d --force-recreate
-            # docker image prune -f
