@@ -1,0 +1,13 @@
+services:
+  front-web:
+    image: kevinkrisma/frontend-erp:latest
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_BASE_URL_GENERICS: "http://fastify:3000/api/v1"
+    networks:
+      - apps-net
+
+networks:
+  apps-net:
+    external: true
