@@ -20,6 +20,7 @@ import LandingLayout from "@/layout/landingLayout";
 import ProtectedRoute from "@/components/protectedRoute";
 import RedirectRoute from "@/components/redirectRoute";
 import RegisterPage from "@/screen/auth/register";
+import RegisterForTournament from "@/screen/dashboard/main/registerForTournament";
 
 export default function AppRouter() {
     return (
@@ -46,6 +47,7 @@ export default function AppRouter() {
                         <Route path="home" element={<DashboardIndex />} />
                         <Route path="match" element={<MatchesPage />} />
                         <Route path="tournament" element={<TournamentsPage />} />
+                        <Route path="tournament/:technicianId" element={<RegisterForTournament />} />
                         <Route path="technician" element={<TechniciansPage />} />
                         <Route path="schedule" element={<SchedulePage />} />
                         <Route path="leaderboard" element={<LeaderboardPage />} />

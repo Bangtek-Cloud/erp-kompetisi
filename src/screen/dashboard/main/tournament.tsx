@@ -21,6 +21,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import TournamentDrawer from "@/components/form/createUpdateTournaments"
+import { Link } from "react-router"
 
 interface TournamentProps {
   id: string
@@ -47,7 +48,7 @@ export default function TournamentsPage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
-  const { isPending, error, isFetching, data: listTournaments } = useQuery({
+  const { isPending, error, data: listTournaments } = useQuery({
     queryKey: ['tournaments'],
     queryFn: async () => {
       const response = await getAllTournaments(accessToken || "");
@@ -58,18 +59,18 @@ export default function TournamentsPage() {
     },
   })
 
-  const {mutate: deleteMutation} = useMutation({
+  const { mutate: deleteMutation } = useMutation({
 
-      mutationFn: async (id: string) => {
-        const response = await deleteTournament(id, accessToken || "");
-        if (!response) {
-          throw new Error("Gagal menghapus turnamen");
-        }
-        return response;
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["tournaments"] });
-      },
+    mutationFn: async (id: string) => {
+      const response = await deleteTournament(id, accessToken || "");
+      if (!response) {
+        throw new Error("Gagal menghapus turnamen");
+      }
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tournaments"] });
+    },
   })
 
   const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
@@ -229,7 +230,9 @@ export default function TournamentsPage() {
                 <Button variant="outline" size="sm" onClick={() => openDetail(tournament)}>
                   Lihat Detail
                 </Button>
-                <Button size="sm">Daftar</Button>
+                <Link to={`/apps/tournament/${tournament.id}`}>
+                  <Button size="sm">Daftar</Button>
+                </Link>
               </CardFooter>
               {isAdmin && (
                 <div className="border-t border-t mt-4 pt-4">
@@ -242,7 +245,7 @@ export default function TournamentsPage() {
                     </Button>
                     {
                       IsSU && (
-                        <Button variant="link" size="sm" onClick={()=>handleRemoveTournament(tournament.id)}>
+                        <Button variant="link" size="sm" onClick={() => handleRemoveTournament(tournament.id)}>
                           Hapus
                         </Button>
                       )
@@ -315,7 +318,9 @@ export default function TournamentsPage() {
                       <Button variant="outline" size="sm" onClick={() => openDetail(tournament)}>
                         Lihat Detail
                       </Button>
-                      <Button size="sm">Daftar</Button>
+                      <Link to={`/apps/tournament/${tournament.id}`}>
+                  <Button size="sm">Daftar</Button>
+                </Link>
                     </CardFooter>
                     {isAdmin && (
                       <div className="border-t border-t mt-4 pt-4">
@@ -328,7 +333,7 @@ export default function TournamentsPage() {
                           </Button>
                           {
                             IsSU && (
-                              <Button variant="link" size="sm" onClick={()=>handleRemoveTournament(tournament.id)}>
+                              <Button variant="link" size="sm" onClick={() => handleRemoveTournament(tournament.id)}>
                                 Hapus
                               </Button>
                             )
