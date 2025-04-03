@@ -5,6 +5,13 @@ import { RootState } from "@/store";
 import { logout } from "@/store/feature/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router"
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function AppsLayout() {
   const dispatch = useDispatch();
@@ -17,6 +24,8 @@ export default function AppsLayout() {
   };
 
   return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={import.meta.env.NODE_ENV !== 'production' ? true : false} />
     <SidebarProvider>
       <AppSidebar user={user || null} logout={handleLogout} />
       <SidebarInset>
@@ -33,6 +42,7 @@ export default function AppsLayout() {
         </div>
       </SidebarInset>
     </SidebarProvider>
+      </QueryClientProvider>
   )
 }
 
