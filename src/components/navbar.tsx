@@ -10,14 +10,14 @@ import {
     SheetTrigger,
 } from "./ui/sheet";
 import { Separator } from "./ui/separator";
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "./ui/navigation-menu";
+// import {
+//     NavigationMenu,
+//     NavigationMenuContent,
+//     NavigationMenuItem,
+//     NavigationMenuLink,
+//     NavigationMenuList,
+//     NavigationMenuTrigger,
+// } from "./ui/navigation-menu";
 import { Button } from "./ui/button";
 import { Link } from "react-router";
 import { ModeToggle } from "./toogle-theme";
@@ -28,10 +28,10 @@ interface RouteProps {
     label: string;
 }
 
-interface FeatureProps {
-    title: string;
-    description: string;
-}
+// interface FeatureProps {
+//     title: string;
+//     description: string;
+// }
 
 const routeList: RouteProps[] = [
     {
@@ -52,29 +52,30 @@ const routeList: RouteProps[] = [
     },
 ];
 
-const featureList: FeatureProps[] = [
-    {
-        title: "Showcase Your Value ",
-        description: "Highlight how your product solves user problems.",
-    },
-    {
-        title: "Build Trust",
-        description:
-            "Leverages social proof elements to establish trust and credibility.",
-    },
-    {
-        title: "Capture Leads",
-        description:
-            "Make your lead capture form visually appealing and strategically.",
-    },
-];
+// const featureList: FeatureProps[] = [
+//     {
+//         title: "Showcase Your Value ",
+//         description: "Highlight how your product solves user problems.",
+//     },
+//     {
+//         title: "Build Trust",
+//         description:
+//             "Leverages social proof elements to establish trust and credibility.",
+//     },
+//     {
+//         title: "Capture Leads",
+//         description:
+//             "Make your lead capture form visually appealing and strategically.",
+//     },
+// ];
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     return (
         <header className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
             <Link to="/" className="font-bold text-lg flex items-center">
-            <Microchip className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary p-1 rounded-lg w-9 h-9 mr-2 border text-white" />
+            <img src="/B-dark.png" className="w-8 h-8 hidden dark:block" />
+            <img src="/B-light.png" className="w-8 h-8 block dark:hidden" />
             Bangtek.
             </Link>
             {/* <!-- Mobile --> */}
@@ -134,7 +135,7 @@ export const Navbar = () => {
             </div>
 
             {/* <!-- Desktop --> */}
-            <NavigationMenu className="hidden lg:block mx-auto">
+            {/* <NavigationMenu className="hidden lg:block mx-auto">
                 <NavigationMenuList>
                     <NavigationMenuItem>
                         <NavigationMenuTrigger className="bg-card text-base">
@@ -178,7 +179,7 @@ export const Navbar = () => {
                         ))}
                     </NavigationMenuItem>
                 </NavigationMenuList>
-            </NavigationMenu>
+            </NavigationMenu> */}
 
             <div className="hidden lg:flex lg:items-center lg:gap-4">
                 <ModeToggle />

@@ -8,9 +8,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/components/theme-provider"
+import { useEffect } from "react"
 
 export function ModeToggle() {
   const { setTheme } = useTheme()
+
+  useEffect(() => {
+    const theme = localStorage.getItem("vite-ui-theme")
+    if(!theme) {
+      setTheme("system")
+      localStorage.setItem("vite-ui-theme", "system")
+    }
+  }
+  , [])
 
   return (
     <DropdownMenu>

@@ -18,6 +18,7 @@ import { toast } from "sonner"
 import { RegisterUser } from "@/services/auth"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "@/store/feature/authSlice"
+import { useState } from "react"
 
 export default function RegisterPage() {
     const dispatch = useDispatch();
@@ -31,10 +32,14 @@ export default function RegisterPage() {
             confirmPassword: "",
         }
     })
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     async function onSubmit(values: z.infer<typeof registerUserSchema>) {
+        setIsSubmitting(true)
         if (values.password !== values.confirmPassword) {
             toast.error('Password tidak sama')
+            setIsSubmitting(false)
+            return
         }
 
         try {
@@ -51,6 +56,9 @@ export default function RegisterPage() {
             } else {
                 toast.error('Terjadi kesalahan')
             }
+        }
+        finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -118,7 +126,7 @@ export default function RegisterPage() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">Submit</Button>
+                        <Button disabled={isSubmitting} type="submit" className="w-full">{isSubmitting ? 'Tunggu Sebentar': 'Daftar'}</Button>
                     </form>
                 </Form>
             </div>

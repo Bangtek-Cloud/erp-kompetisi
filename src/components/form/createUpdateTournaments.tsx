@@ -42,8 +42,8 @@ export default function TournamentDrawer({
   const [maxParticipants, setMaxParticipants] = useState(0);
   const [rules, setRules] = useState<string[]>([""]);
   const [disabled, setDisabled] = useState(false);
-  const [prizes, setPrizes] = useState<{ title: string; value: string }[]>([{ title: "", value: "" }]);
-  const [prices, setPrices] = useState<{ key: number; value: string; amount: number }[]>([{ key: 1, value: "", amount: 0 }]);
+  const [prizes, setPrizes] = useState<{ title: string;  value: string }[]>([{ title: "", value: "" }]);
+  const [prices, setPrices] = useState<{ key: number; description: string; value: string; amount: number }[]>([{ key: 1, value: "", amount: 0, description: "", }]);
   const [usingLogoPrice, setUsingLogoPrice] = useState(0);
   const [status, setStatus] = useState<"UPCOMING" | "ONGOING" | "COMPLETE">("UPCOMING");
 
@@ -235,7 +235,17 @@ export default function TournamentDrawer({
                       updatedPrices[index].value = e.target.value;
                       setPrices(updatedPrices);
                     }}
-                    placeholder={`Nama Harga ${index + 1}`}
+                    placeholder={`Nama Paket ${index + 1}`}
+                  />
+                  <Input
+                    type="text"
+                    value={price.description}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const updatedPrices = [...prices];
+                      updatedPrices[index].description = e.target.value;
+                      setPrices(updatedPrices);
+                    }}
+                    placeholder={`Deskripsi ${index + 1}`}
                   />
                   <Input
                     type="number"
@@ -249,20 +259,20 @@ export default function TournamentDrawer({
                   />
                 </div>
               ))}
-              <Button variant="link" onClick={() => setPrices([...prices, { key: prices.length + 1, value: "", amount: 0 }])}>Tambah Harga</Button>
+              <Button variant="link" onClick={() => setPrices([...prices, { key: prices.length + 1, value: "", amount: 0, description:"" }])}>Tambah Harga</Button>
             </div>
-              <div className="mt-4">
-                <label>Status</label>
-                <select
-                  value={status}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value as "UPCOMING" | "ONGOING" | "COMPLETE")}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="UPCOMING">Akan Datang</option>
-                  <option value="ONGOING">Sedang Berjalan</option>
-                  <option value="COMPLETE">Selesai</option>
-                </select>
-              </div>
+            <div className="mt-4">
+              <label>Status</label>
+              <select
+                value={status}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value as "UPCOMING" | "ONGOING" | "COMPLETE")}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="UPCOMING">Akan Datang</option>
+                <option value="ONGOING">Sedang Berjalan</option>
+                <option value="COMPLETE">Selesai</option>
+              </select>
+            </div>
           </div>
 
           {/* Nama Turnamen */}

@@ -14,7 +14,7 @@ genericsInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 403) {
+    if (error.response.status === 440) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       setTimeout(() => {

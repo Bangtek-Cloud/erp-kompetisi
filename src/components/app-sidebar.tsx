@@ -1,15 +1,14 @@
 import {
-  ArrowUpCircleIcon,
   Calendar,
-  CreditCard,
-  DollarSign,
-  FileText,
-  HelpCircleIcon,
+  // CreditCard,
+  // DollarSign,
+  // FileText,
+  // HelpCircleIcon,
   LayoutDashboardIcon,
-  SettingsIcon,
-  Sword,
+  // SettingsIcon,
+  // Sword,
   Trophy,
-  User,
+  // User,
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import {
@@ -21,9 +20,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavNormal } from "./nav-normal"
+// import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
-import { NavSecondary } from "./nav-secondary"
+// import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router"
 import { IUser } from "@/types/user"
 
@@ -44,78 +43,78 @@ const data = {
       url: "/apps/home",
       icon: LayoutDashboardIcon,
     },
+    // {
+    //   title: "Matches",
+    //   url: "/apps/match",
+    //   icon: Sword,
+    // },
     {
-      title: "Matches",
-      url: "/apps/match",
-      icon: Sword,
+      title: "Events",
+      url: "/apps/schedule",
+      icon: Calendar,
     },
     {
       title: "Tournaments",
       url: "/apps/tournament",
       icon: Trophy,
     },
-    {
-      title: "Technicians",
-      url: "/apps/technician",
-      icon: User,
-    },
-    {
-      title: "Schedule",
-      url: "/apps/schedule",
-      icon: Calendar,
-    },
+    // {
+    //   title: "Peserta",
+    //   url: "/apps/technician",
+    //   icon: User,
+    // },
   ],
-  finance: [
-    {
-      title: "Financial Dashboard",
-      icon: DollarSign,
-      url: "/apps/finance/home",
-    },
-    {
-      title: "Transactions",
-      icon: CreditCard,
-      url: "/apps/finance/transactions",
-    },
-    {
-      title: "Financial Reports",
-      icon: FileText,
-      url: "/apps/finance/reports",
-    },
-    {
-      title: "Public Reports",
-      icon: FileText,
-      url: "/apps/finance/public",
-    },
-    {
-      title: "Donors",
-      icon: DollarSign,
-      url: "/apps/finance/donors",
-    },
-  ],
-  management: [
-    {
-      title: "Leaderboard",
-      icon: DollarSign,
-      url: "/apps/leaderboard",
-    },
-    {
-      title: "Reports",
-      icon: CreditCard,
-      url: "/apps/reports",
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/apps/settings",
-      icon: SettingsIcon,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
-  ],
+  // finance: [
+  //   {
+  //     title: "Financial Dashboard",
+  //     icon: DollarSign,
+  //     url: "/apps/finance/home",
+  //   },
+  //   {
+  //     title: "Transactions",
+  //     icon: CreditCard,
+  //     url: "/apps/finance/transactions",
+  //   },
+  //   {
+  //     title: "Financial Reports",
+  //     icon: FileText,
+  //     url: "/apps/finance/reports",
+  //   },
+  //   {
+  //     title: "Public Reports",
+  //     icon: FileText,
+  //     url: "/apps/finance/public",
+  //   },
+  //   {
+  //     title: "Donors",
+  //     icon: DollarSign,
+  //     url: "/apps/finance/donors",
+  //   },
+  // ],
+  // management: [
+  //   {
+  //     title: "Leaderboard",
+  //     icon: DollarSign,
+  //     url: "/apps/leaderboard",
+  //   },
+  //   {
+  //     title: "Reports",
+  //     icon: CreditCard,
+  //     url: "/apps/reports",
+  //   },
+  // ],
+  // navSecondary: [
+  //   {
+  //     title: "Settings",
+  //     url: "/apps/settings",
+  //     icon: SettingsIcon,
+  //   },
+  //   {
+  //     title: "Get Help",
+  //     url: "#",
+  //     icon: HelpCircleIcon,
+  //   },
+  // ],
 }
 
 export function AppSidebar(props: sidebarProps) {
@@ -129,7 +128,8 @@ export function AppSidebar(props: sidebarProps) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link to="/apps/home">
-                <ArrowUpCircleIcon className="h-5 w-5" />
+                <img src="/B-dark.png" className="w-8 h-8 hidden dark:block" />
+                <img src="/B-light.png" className="w-8 h-8 block dark:hidden" />
                 <span className="text-base font-semibold">Bangtek.</span>
               </Link>
             </SidebarMenuButton>
@@ -138,9 +138,9 @@ export function AppSidebar(props: sidebarProps) {
       </SidebarHeader>
       <SidebarContent className="bg-background">
         <NavMain items={data.navMain} />
-        <NavNormal nameMenu="Finance" items={data.finance} />
+        {/* <NavNormal nameMenu="Finance" items={data.finance} />
         <NavNormal nameMenu="Management" items={data.management} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter className="bg-background">
         <NavUser user={props.user} logout={props.logout} />

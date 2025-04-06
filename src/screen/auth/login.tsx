@@ -18,10 +18,12 @@ import { toast } from "sonner"
 import { loginUser } from "@/services/auth"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "@/store/feature/authSlice"
+import { useState } from "react"
 
 export default function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const form = useForm<z.infer<typeof userLoginSchema>>({
         resolver: zodResolver(userLoginSchema),
         defaultValues: {
@@ -31,6 +33,7 @@ export default function LoginPage() {
     })
 
     async function onSubmit(values: z.infer<typeof userLoginSchema>) {
+        setIsSubmitting(true)
         try {
             const data = await loginUser(values.email, values.password)
             if (data.error) {
@@ -44,6 +47,9 @@ export default function LoginPage() {
             if (e instanceof Error) {
                 toast.error(e.message)
             }
+        }
+        finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -84,7 +90,7 @@ export default function LoginPage() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">Submit</Button>
+                        <Button disabled={isSubmitting} type="submit" className="w-full">{isSubmitting ? 'Tunggu Sebentar...':'Masuk'}</Button>
                     </form>
                 </Form>
             </div>

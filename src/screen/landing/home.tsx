@@ -1,7 +1,7 @@
 import { HeroSection } from "@/components/hero-section"
-import { Button } from "@/components/ui/button"
-import { Trophy, Users, DollarSign, BarChart2, ChevronRight, CheckCircle2, Swords } from "lucide-react"
-import { Link } from "react-router"
+// import { Button } from "@/components/ui/button"
+// import { Trophy, Users, DollarSign, BarChart2, ChevronRight, CheckCircle2, Swords } from "lucide-react"
+// import { Link } from "react-router"
 
 export default function LandingHome() {
   return (
@@ -11,7 +11,7 @@ export default function LandingHome() {
         <HeroSection />
 
         {/* Features Section */}
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
+        {/* <section id="features" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -78,10 +78,10 @@ export default function LandingHome() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Tournaments Section */}
-        <section id="tournaments" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        {/* <section id="tournaments" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -141,10 +141,10 @@ export default function LandingHome() {
               </Link>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Transparency Section */}
-        <section id="transparency" className="w-full py-12 md:py-24 lg:py-32">
+        {/* <section id="transparency" className="w-full py-12 md:py-24 lg:py-32">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -253,10 +253,10 @@ export default function LandingHome() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Contact Section */}
-        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+        {/* <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -314,10 +314,10 @@ export default function LandingHome() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
 
-      <footer className="border-t p-6 md:py-0">
+      {/* <footer className="border-t p-6 md:py-0">
         <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
             © 2025 TechComp ERP. All rights reserved.
@@ -334,7 +334,7 @@ export default function LandingHome() {
             </Link>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   )
 }

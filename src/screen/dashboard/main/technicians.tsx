@@ -2,15 +2,69 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Filter, Download } from "lucide-react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { Link, useParams } from "react-router"
+import { getTournamentById, updateContestantById } from "@/services/tournament"
+import { toast } from "sonner"
 
 export default function TechniciansPage() {
+  const { tournamentId } = useParams<{ tournamentId?: string }>()
+  const queryClient = useQueryClient();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
+
+  const { data: techData, isFetching } = useQuery({
+    queryKey: ['technicians', tournamentId],
+    queryFn: async () => {
+      const response = await getTournamentById(tournamentId || "", accessToken || "")
+      return response.data
+    },
+  })
+
+  const {mutate: update, isPending} = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: any }) => {
+      const res = await updateContestantById(id, data, accessToken || '')
+      if(res.success){
+        toast.success('berhasil update data')
+        queryClient.invalidateQueries({queryKey: ['technicians', tournamentId]})
+        queryClient.invalidateQueries({queryKey: ['tournaments']})
+        
+      } else {
+        toast.error('gagal update data')
+      }
+      return res.data
+    }
+  })
+
+  if (isFetching || isPending) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="loader"></div>
+        <div>Loading</div>
+      </div>
+    )
+  }
+
+  if (!isAdmin) {
+    return (
+      <div>
+        <Link to={'/apps/tournament'}>
+          Go Back
+        </Link>
+      </div>
+    )
+  }
+  
+
   return (
-      <main className="flex-1 container mx-auto p-8">
-        <div className="flex md:flex-row gap-4 flex-col justify-between md:items-center mb-8">
-          <h1 className="text-3xl font-bold text-left">Technicians</h1>
+    <main className="flex-1 container mx-auto p-8">
+      <div className="flex md:flex-row gap-4 flex-col justify-between md:items-center mb-8">
+        <h1 className="text-3xl font-bold text-left">Peserta</h1>
+        {isAdmin && (
           <div className="flex gap-2">
             <Button variant="outline">
               <Download className="mr-2 h-4 w-4" /> Export
@@ -19,147 +73,95 @@ export default function TechniciansPage() {
               <Plus className="mr-2 h-4 w-4" /> Add Technician
             </Button>
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="flex items-center mb-6 gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input type="search" placeholder="Search technicians..." className="w-full pl-8" />
-          </div>
-          <Button variant="outline">
-            <Filter className="mr-2 h-4 w-4" /> Filter
-          </Button>
+      <div className="flex items-center mb-6 gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input type="search" placeholder="Search technicians..." className="w-full pl-8" />
         </div>
+        <Button variant="outline">
+          <Filter className="mr-2 h-4 w-4" /> Filter
+        </Button>
+      </div>
 
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Registered Technicians</CardTitle>
-            <CardDescription>Manage all technicians participating in competitions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Specialization</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Experience</TableHead>
-                  <TableHead>Competitions</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>Turnamen {techData?.name}</CardTitle>
+          <CardDescription>Peserta dan panitia dalam turnamen</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nama</TableHead>
+                <TableHead>Alamat</TableHead>
+                <TableHead>Bawa Alat Sendiri</TableHead>
+                <TableHead>Alat yang dibawa</TableHead>
+                <TableHead>Ukuran Baju</TableHead>
+                <TableHead>Tipe Player</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {techData.contestants.length > 0 && techData?.contestants.map((technician: any, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      {
+                        technician.logo && (
+                          <Link to={'data:image/png;base64,' + technician.logo} target="_blank">
+                            <img src={'data:image/png;base64,' + technician.logo} alt="name" className="w-16 h-16" />
+                          </Link>
+                        )
+                      }
+                      <div>{technician.playerType === 'INDIVIDUAL' ? technician?.user?.name : technician?.storeName}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{technician.storeAddress}</TableCell>
+                  <TableCell>{technician.equipmentSource ? 'ya' : 'tidak'}</TableCell>
+                  <TableCell><ul>
+                    {
+                      technician?.equipmentSource &&
+                      technician?.equipmentOwned.map((item: string, index: number) => (
+                        <li key={index}>{index + 1} {item}</li>
+                      ))
+                    }
+                  </ul>
+                  </TableCell>
+                  <TableCell>{technician.shirtSize}</TableCell>
+                  <TableCell>
+                    {technician.playerType}
+                  </TableCell>
+                  <TableCell>
+                    {!technician.isVerified ? 'Belum diverifikasi' : 'Done'}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm" onClick={()=>update({ id: technician?.id, data: { isVerified: !technician.isVerified } })}>
+                      Verifikasi
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {[
-                  {
-                    name: "Ahmad Rizki",
-                    avatar: "AR",
-                    specialization: "Network Engineer",
-                    company: "PT Telkom Indonesia",
-                    experience: "5 years",
-                    competitions: 8,
-                    status: "Active",
-                  },
-                  {
-                    name: "Budi Santoso",
-                    avatar: "BS",
-                    specialization: "System Administrator",
-                    company: "Tokopedia",
-                    experience: "7 years",
-                    competitions: 12,
-                    status: "Active",
-                  },
-                  {
-                    name: "Citra Dewi",
-                    avatar: "CD",
-                    specialization: "Database Administrator",
-                    company: "Bank Mandiri",
-                    experience: "4 years",
-                    competitions: 5,
-                    status: "Active",
-                  },
-                  {
-                    name: "Denny Pratama",
-                    avatar: "DP",
-                    specialization: "Security Specialist",
-                    company: "Gojek",
-                    experience: "6 years",
-                    competitions: 9,
-                    status: "Active",
-                  },
-                  {
-                    name: "Eka Putri",
-                    avatar: "EP",
-                    specialization: "Cloud Engineer",
-                    company: "Bukalapak",
-                    experience: "3 years",
-                    competitions: 4,
-                    status: "Inactive",
-                  },
-                  {
-                    name: "Fajar Nugroho",
-                    avatar: "FN",
-                    specialization: "Hardware Specialist",
-                    company: "Astra International",
-                    experience: "8 years",
-                    competitions: 15,
-                    status: "Active",
-                  },
-                  {
-                    name: "Gita Purnama",
-                    avatar: "GP",
-                    specialization: "DevOps Engineer",
-                    company: "Traveloka",
-                    experience: "5 years",
-                    competitions: 7,
-                    status: "Active",
-                  },
-                ].map((technician, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                        <AvatarImage src={"https://api.dicebear.com/9.x/open-peeps/svg?seed="+technician.avatar} alt="name" />
-                          <AvatarFallback>{technician.avatar}</AvatarFallback>
-                        </Avatar>
-                        <div>{technician.name}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{technician.specialization}</TableCell>
-                    <TableCell>{technician.company}</TableCell>
-                    <TableCell>{technician.experience}</TableCell>
-                    <TableCell>{technician.competitions}</TableCell>
-                    <TableCell>
-                      <Badge variant={technician.status === "Active" ? "default" : "secondary"}>
-                        {technician.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        View
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        Edit
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <div className="text-sm text-muted-foreground">Showing 7 of 128 technicians</div>
-            <div className="flex gap-1">
-              <Button variant="outline" size="sm" disabled>
-                Previous
-              </Button>
-              <Button variant="outline" size="sm">
-                Next
-              </Button>
-            </div>
-          </CardFooter>
-        </Card>
-      </main>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <div className="text-sm text-muted-foreground">Showing 7 of 128 technicians</div>
+          <div className="flex gap-1">
+            <Button variant="outline" size="sm" disabled>
+              Previous
+            </Button>
+            <Button variant="outline" size="sm">
+              Next
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
+
+    </main>
   )
 }
 
