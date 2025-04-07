@@ -149,7 +149,6 @@ export default function TechniciansPage() {
           </Table>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <div className="text-sm text-muted-foreground">Showing 7 of 128 technicians</div>
           <div className="flex gap-1">
             <Button variant="outline" size="sm" disabled>
               Previous

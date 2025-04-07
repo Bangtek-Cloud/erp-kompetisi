@@ -12,7 +12,13 @@ import {
 } from '@tanstack/react-query'
 import PendingTransaction from "@/components/pending-transaction";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity
+    }
+  }
+})
 
 export default function AppsLayout() {
   const dispatch = useDispatch();
