@@ -14,7 +14,7 @@ RUN bun install && bun add typescript --global
 COPY . .
 
 # Build aplikasi TypeScript terlebih dahulu, kemudian Vite
-RUN bun run build
+RUN bun run build --mode production
 
 # Expose port untuk aplikasi, biasanya Vite di port 3000, sesuaikan jika berbeda
 EXPOSE 8080

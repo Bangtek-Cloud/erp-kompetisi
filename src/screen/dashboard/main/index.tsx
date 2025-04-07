@@ -4,10 +4,12 @@ import { Trophy, DollarSign, Swords } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Link } from "react-router"
+import MaintenanceAlert from "@/components/maintenance-alert"
 
 export default function DashboardIndex() {
   return (
     <div className="container mx-auto p-8">
+      <MaintenanceAlert />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Dashboard</h1>
       </div>

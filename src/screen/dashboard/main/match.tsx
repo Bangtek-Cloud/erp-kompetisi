@@ -5,10 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Search, Filter, Plus } from "lucide-react"
+import MaintenanceAlert from "@/components/maintenance-alert"
 
 export default function MatchesPage() {
   return (
     <div className="container mx-auto p-8">
+      <MaintenanceAlert />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">1vs1 Matches</h1>
         <Button>

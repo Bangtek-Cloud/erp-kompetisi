@@ -20,6 +20,11 @@ import LandingLayout from "@/layout/landingLayout";
 import ProtectedRoute from "@/components/protectedRoute";
 import RedirectRoute from "@/components/redirectRoute";
 import RegisterPage from "@/screen/auth/register";
+import RegisterForTournament from "@/screen/dashboard/main/registerForTournament";
+import TournamentUpdatePage from "@/screen/dashboard/main/tournament/update";
+import ConfirmTournament from "@/screen/dashboard/main/tournament/confirm";
+import NotificationPage from "@/screen/dashboard/main/notification";
+import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate";
 
 export default function AppRouter() {
     return (
@@ -46,11 +51,19 @@ export default function AppRouter() {
                         <Route path="home" element={<DashboardIndex />} />
                         <Route path="match" element={<MatchesPage />} />
                         <Route path="tournament" element={<TournamentsPage />} />
-                        <Route path="technician" element={<TechniciansPage />} />
+                        <Route path="tournament/create" element={<TournamentUpdatePage actionType="create" />} />
+                        <Route path="tournament/update/:tournamentId" element={<TournamentUpdatePage actionType="update" />} />
+                        <Route path="tournament/register/:tournamentId" element={<RegisterForTournament />} />
+                        <Route path="tournament/confirm/:tournamentId" element={<ConfirmTournament />} />
+                        <Route path="tournament/user/:tournamentId" element={<TechniciansPage />} />
+                        {/* <Route path="technician" element={<TechniciansPage />} /> */}
                         <Route path="schedule" element={<SchedulePage />} />
+                        <Route path="schedule/create" element={<EventUpdateOrCreate actionType="create" />} />
+                        <Route path="schedule/update/:eventId" element={<EventUpdateOrCreate actionType="update" />} />
                         <Route path="leaderboard" element={<LeaderboardPage />} />
                         <Route path="reports" element={<ReportsPage />} />
                         <Route path="settings" element={<AccountSettings />} />
+                        <Route path="notification" element={<NotificationPage />} />
 
                         <Route path="finance">
                             <Route index element={<Navigate to="/apps/finance/home" />} />

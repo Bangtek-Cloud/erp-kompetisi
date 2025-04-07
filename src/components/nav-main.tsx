@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Link, useLocation } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
 
 export function NavMain({
     items,
@@ -23,13 +23,14 @@ export function NavMain({
 }) {
     const location = useLocation()
     const pathname = location.pathname
+    const navigate = useNavigate()
 
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">
                 <SidebarMenu>
                     <SidebarMenuItem className="flex items-center gap-2">
-                        <SidebarMenuButton
+                        <SidebarMenuButton onClick={() => navigate("/apps/notification")}
                             tooltip="Quick Create"
                             className="min-w-8 bg-secondary text-secondary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
                         >

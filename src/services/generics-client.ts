@@ -2,7 +2,7 @@ import axios from "axios";
 import { refreshToken } from "./auth";
 
 const genericsInstance = axios.create({
-  baseURL: "https://api.bangtek.org/api/v1",
+  baseURL: import.meta.env.VITE_BASE_URL_GENERICS,
   headers: {
     "Content-Type": "application/json",
   },
@@ -14,7 +14,7 @@ genericsInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 403) {
+    if (error.response.status === 440) {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       setTimeout(() => {

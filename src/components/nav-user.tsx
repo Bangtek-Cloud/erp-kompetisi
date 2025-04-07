@@ -4,7 +4,7 @@ import {
     BellIcon,
     LogOutIcon,
     MoreVerticalIcon,
-    UserCircleIcon,
+    // UserCircleIcon,
 } from "lucide-react"
 
 import {
@@ -28,6 +28,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { IUser } from "@/types/user"
+import { useNavigate } from "react-router"
 
 export function NavUser({
     user,
@@ -37,7 +38,7 @@ export function NavUser({
     logout: () => void
 }) {
     const { isMobile } = useSidebar()
-
+const navigate = useNavigate()
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -91,11 +92,11 @@ export function NavUser({
                         }
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
+                            {/* <DropdownMenuItem>
                                 <UserCircleIcon />
                                 Account
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            </DropdownMenuItem> */}
+                            <DropdownMenuItem onClick={()=>navigate('/apps/notification')}>
                                 <BellIcon />
                                 Notifications
                             </DropdownMenuItem>
