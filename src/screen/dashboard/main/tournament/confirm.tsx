@@ -117,14 +117,20 @@ export default function ConfirmTournament() {
             <div className="flex flex-col gap-4">
                 <h1 className="text-2xl font-bold">Detail pendaftaran kontestan</h1>
                 <div className="shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold mb-4">Cara Pembayaran</h2>
-                    <ol className="list-decimal list-inside space-y-2">
-                        <li>Transfer ke rekening BRI: 0878 0100 5002 505 a.n. Norman Chandra</li>
-                        <li>
-                            Upload bukti pembayaran ke nomor WA <Link className="bg-muted p-2" to={'https://wa.me/628998087576'}>{'+62 899-8087-576'} 🔗</Link>
-                        </li>
-                        <li>Tunggu verifikasi dari panitia</li>
-                    </ol>
+                    {
+                        tournament.data.isVerified === false && (
+                            <>
+                                <h2 className="text-xl font-semibold mb-4">Cara Pembayaran</h2>
+                                <ol className="list-decimal list-inside space-y-2">
+                                    <li>Transfer ke rekening BRI: 0878 0100 5002 505 a.n. Norman Chandra</li>
+                                    <li>
+                                        Upload bukti pembayaran ke nomor WA <Link target="_blank" className="bg-muted p-2" to={'https://wa.me/628998087576'}>{'+62 899-8087-576'} 🔗</Link>
+                                    </li>
+                                    <li>Tunggu verifikasi dari panitia</li>
+                                </ol>
+                            </>
+                        )
+                    }
                     <h2 className="text-xl font-semibold mt-6 mb-4 border-b pb-2">Rincian Pendaftaran</h2>
                     <div className="p-6 rounded-xl shadow-md border space-y-6">
                         <div className="flex items-center justify-between">
@@ -243,7 +249,6 @@ export default function ConfirmTournament() {
                     {tournament.data.isVerified === true && (
                         <div className="bg-green-100 text-green-700 p-4 rounded-md shadow-md mt-6">
                             <h2 className="text-lg font-semibold">Pendaftaran Anda Telah Diverifikasi</h2>
-                            <p>Silakan lanjutkan ke pembayaran.</p>
                         </div>
                     )}
 

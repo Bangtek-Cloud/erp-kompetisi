@@ -25,14 +25,28 @@ export default function TechniciansPage() {
     },
   })
 
-  const {mutate: update, isPending} = useMutation({
+  const { mutate: update, isPending } = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
       const res = await updateContestantById(id, data, accessToken || '')
-      if(res.success){
+      if (res.success) {
         toast.success('berhasil update data')
-        queryClient.invalidateQueries({queryKey: ['technicians', tournamentId]})
-        queryClient.invalidateQueries({queryKey: ['tournaments']})
-        
+        queryClient.invalidateQueries({ queryKey: ['technicians', tournamentId] })
+        queryClient.setQueryData(['tournaments'], (old: any) => {
+          if (!old) return old
+
+          return old.map((t: any) => {
+            if (t.id !== tournamentId) return t
+
+            return {
+              ...t,
+              contestants: t.contestants?.map((c: any) =>
+                c.id === id ? { ...c, ...data } : c
+              )
+            }
+          })
+        })
+
+
       } else {
         toast.error('gagal update data')
       }
@@ -58,7 +72,7 @@ export default function TechniciansPage() {
       </div>
     )
   }
-  
+
 
   return (
     <main className="flex-1 container mx-auto p-8">
@@ -95,7 +109,9 @@ export default function TechniciansPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Sebagai</TableHead>
                 <TableHead>Nama</TableHead>
+                <TableHead>Mewakili</TableHead>
                 <TableHead>Alamat</TableHead>
                 <TableHead>Bawa Alat Sendiri</TableHead>
                 <TableHead>Alat yang dibawa</TableHead>
@@ -110,16 +126,23 @@ export default function TechniciansPage() {
                 <TableRow key={index}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      {
-                        technician.logo && (
-                          <Link to={'data:image/png;base64,' + technician.logo} target="_blank">
-                            <img src={'data:image/png;base64,' + technician.logo} alt="name" className="w-16 h-16" />
+                      {technician.playerType === 'INDIVIDUAL' ?
+                        (
+                          <Link to={import.meta.env.VITE_BASE_S3 + technician.user.avatar} target="_blank">
+                            <img src={import.meta.env.VITE_BASE_S3 + technician.user.avatar} alt="name" className="w-16 h-16" />
+                          </Link>
+                        )
+                        :
+                        (
+                          <Link to={import.meta.env.VITE_BASE_S3 + technician.logoUrl} target="_blank">
+                            <img src={import.meta.env.VITE_BASE_S3 + technician.logoUrl} alt="name" className="w-16 h-16" />
                           </Link>
                         )
                       }
-                      <div>{technician.playerType === 'INDIVIDUAL' ? technician?.user?.name : technician?.storeName}</div>
+                      <div>{technician?.user?.name}</div>
                     </div>
                   </TableCell>
+                  <TableCell>{technician.storeName ?? "-"}</TableCell>
                   <TableCell>{technician.storeAddress}</TableCell>
                   <TableCell>{technician.equipmentSource ? 'ya' : 'tidak'}</TableCell>
                   <TableCell><ul>
@@ -139,8 +162,8 @@ export default function TechniciansPage() {
                     {!technician.isVerified ? 'Belum diverifikasi' : 'Done'}
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={()=>update({ id: technician?.id, data: { isVerified: !technician.isVerified } })}>
-                      Verifikasi
+                    <Button variant={technician.isVerified ? 'destructive' : 'default'} size="sm" onClick={() => update({ id: technician?.id, data: { isVerified: !technician.isVerified } })}>
+                      {technician.isVerified ? "Batalkan Verifikasi" : "Verifikasi Sekarang"}
                     </Button>
                   </TableCell>
                 </TableRow>

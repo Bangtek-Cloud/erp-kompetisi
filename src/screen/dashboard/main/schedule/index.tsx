@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Calendar, Filter, MapPin, Plus, Search } from "lucide-react"
+import { Calendar, Filter, MapPin, Plus, Search, Stamp } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import {
     useMutation,
@@ -58,7 +58,7 @@ export default function SchedulePage() {
             const response = await deleteEvent(id, accessToken || "")
             if (response.success) {
                 toast.success('Berhasil hapus')
-                queryClient.invalidateQueries({queryKey: ['events']})
+                queryClient.invalidateQueries({ queryKey: ['events'] })
             } else {
                 toast.error('Terjadi kesalahan dalam menghapus data, mungkin data masih terikat dengan turnamen')
             }
@@ -143,7 +143,11 @@ export default function SchedulePage() {
                                             <CardHeader>
                                                 <div className="flex flex-col">
                                                     <div className="flex mx-auto">
-                                                        <img src={event?.logo} className="w-32 h-32" />
+                                                        {
+                                                            event?.eventLogoUrl && (
+                                                                <img src={import.meta.env.VITE_BASE_S3 + event?.eventLogoUrl} className="w-32 h-32" />
+                                                            )
+                                                        }
                                                     </div>
                                                     <div>
                                                         <CardTitle>
@@ -165,9 +169,9 @@ export default function SchedulePage() {
                                                         <div className="font-medium">
                                                             - {DateTime.fromISO(event.endDate).setLocale('id').toFormat('d MMMM yyyy')}
                                                         </div>
-                                                        <div className="text-sm text-muted-foreground">{event.isActive ? 'Aktif' : 'Selesai'}</div>
                                                     </div>
-                                                    <p className="text-sm flex"><MapPin /> {event.location}</p>
+                                                    <p className="text-sm flex mb-4"><Stamp className="h-4 w-4 mr-4" /> Acara {event.isActive ? 'Berjalan' : 'Selesai'}</p>
+                                                    <p className="text-sm flex"><MapPin className="h-4 w-4 mr-4" /> {event.location}</p>
                                                 </div>
                                             </CardContent>
                                             <CardFooter className="p-4 pt-0 flex gap-2">
@@ -209,7 +213,11 @@ export default function SchedulePage() {
                                                         <CardHeader>
                                                             <div className="flex flex-col">
                                                                 <div className="flex mx-auto">
-                                                                    <img src={event?.logo} className="w-32 h-32" />
+                                                                    {
+                                                                        event?.eventLogoUrl && (
+                                                                            <img src={import.meta.env.VITE_BASE_S3 + event?.eventLogoUrl} className="w-32 h-32" />
+                                                                        )
+                                                                    }
                                                                 </div>
                                                                 <div>
                                                                     <CardTitle>

@@ -115,7 +115,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                     rules: JSON.parse(datas.rules) || [],
                     isActive: datas.isActive ?? true
                 }));
-                setPreview(datas.logo)
+                setPreview(import.meta.env.VITE_BASE_S3+datas.eventLogoUrl)
                 setLoading(false)
             };
             fetchTournamentData();
