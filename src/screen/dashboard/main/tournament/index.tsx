@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Search, Filter, Plus } from "lucide-react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { deleteTournament, getAllTournaments } from "@/services/tournament"
 import {
   AlertDialog,
@@ -54,22 +54,29 @@ function groupTournamentsByEvent(
 export default function TournamentsPage() {
   const queryClient = useQueryClient();
   const user = useSelector((state: RootState) => state.auth.user);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const [enableData, setEnableData] = useState<{ event: TournamentProps['event']; tournaments: TournamentProps[] }[] | undefined>(undefined)
-  const [disableData, setDisableData] = useState<{ event: TournamentProps['event']; tournaments: TournamentProps[] }[] | undefined>(undefined)
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
 
-  const { isFetching, error } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryKey: ['tournaments'],
     queryFn: async () => {
       const response = await getAllTournaments(accessToken || "");
       if (response.error) {
         throw new Error(response.error);
       }
-      setEnableData(groupTournamentsByEvent(response.data, false))
-      setDisableData(groupTournamentsByEvent(response.data, true))
       return response.data;
     },
   })
+  
+  const enableData = useMemo(() => {
+    if (!data) return []
+    return groupTournamentsByEvent(data, false)
+  }, [data])
+  
+  const disableData = useMemo(() => {
+    if (!data) return []
+    return groupTournamentsByEvent(data, true)
+  }, [data])
+  
 
   const { mutate: deleteMutation } = useMutation({
 
