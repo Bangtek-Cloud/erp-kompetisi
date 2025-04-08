@@ -1,14 +1,37 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Plus, Filter, Download } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Plus, Download, ArrowUpDown } from "lucide-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { Link, useParams } from "react-router"
 import { getTournamentById, updateContestantById } from "@/services/tournament"
 import { toast } from "sonner"
+import { ColumnDef } from "@tanstack/react-table"
+import { DataTable } from "@/components/data-table"
+
+
+type TechType = {
+  id: string
+  name: string
+  avatar: string
+  logo: string
+  storeName: string
+  storeAddress: string
+  phoneNo: string,
+  playerType: string,
+  shirtSize: string,
+  equipmentSource: boolean,
+  equipmentOwned: string,
+  isVerified: boolean,
+  email: string,
+  user: {
+    name: string,
+    avatar: string,
+    email: string,
+    usingAvatar: boolean
+  }
+}
 
 export default function TechniciansPage() {
   const { tournamentId } = useParams<{ tournamentId?: string }>()
@@ -54,6 +77,108 @@ export default function TechniciansPage() {
     }
   })
 
+  const columns: ColumnDef<TechType>[] = [
+    {
+      accessorKey: 'user.avatar',
+      header: () => <div style={{ minWidth: '100px' }}>Avatar</div>,
+      accessorFn: row => row.user.avatar,
+      cell: ({ row }) => {
+        const usingAvatar = row.original.user.usingAvatar
+        const avatar = row.original.user.avatar
+        return (
+          <img src={usingAvatar ? '/image/' + avatar : avatar} className="w-24 h-24" />
+        )
+      }
+    },
+    {
+      accessorKey: "name",
+      header: () => <div style={{ minWidth: '200px' }}>Nama Peserta</div>,
+      accessorFn: row => row.user.name,
+      size: 100
+    },
+    {
+      accessorKey: "email",
+      header: () => <div style={{ minWidth: '200px' }}>Email Peserta</div>,
+      accessorFn: row => row.user.email,
+      size: 100
+    },
+    {
+      accessorKey: "phoneNo",
+      header: () => <div style={{ minWidth: '200px' }}>telp</div>,
+    },
+    {
+      accessorKey: 'playerType',
+      header: () => <div style={{ minWidth: '100px' }}>Tipe Peserta</div>,
+    },
+    {
+      accessorKey: 'storeName',
+      header: () => <div style={{ minWidth: '100px' }}>Mewakili</div>,
+    },
+    {
+      accessorKey: 'storeAddress',
+      header: () => <div style={{ minWidth: '200px' }}>Alamat Peserta</div>,
+    },
+    {
+      accessorKey: 'shirtSize',
+      header: () => <div style={{ minWidth: '100px' }}>Ukuran Baju</div>,
+    },
+    {
+      accessorKey: 'equipmentOwned',
+      header: ({ column }) => <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Bawa alat sendiri
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>,
+      cell: ({ row }) => {
+        return row.original.equipmentSource ? 'Ya' : 'Tidak'
+      }
+    },
+    {
+      accessorKey: 'equipmentOwned',
+      header: () => <div style={{ minWidth: '200px' }}>Alat yang dibawa</div>,
+      cell: ({ row }) => {
+        if (row.original.equipmentSource) {
+          return (
+            <ul>
+              {Array.isArray(row.original.equipmentOwned) ? row.original.equipmentOwned.map((item: string, index: number) => (
+                <li key={index}>{index + 1}. {item}</li>
+              )) : null
+              }
+            </ul>
+          )
+        }
+
+      }
+    },
+    {
+      accessorKey: 'equipmentSource',
+      header: ({ column }) => <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status Verifikasi
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>,
+      cell: ({ row }) => {
+        return row.original.equipmentSource ? 'Sudah Verifikasi' : 'Belum Verifikasi'
+      }
+    },
+    {
+      accessorKey: 'id',
+      header: () => <div style={{ minWidth: '200px' }}>Action</div>,
+      cell: ({ row }) => {
+        return (
+          <Button variant={row.original.isVerified ? 'destructive' : 'default'} size="sm" onClick={() => update({ id: Number(row.original.id), data: { isVerified: !row.original.isVerified } })}>
+            {row.original.isVerified ? "Batalkan Verifikasi" : "Verifikasi Sekarang"}
+          </Button>
+        )
+
+      }
+    }
+  ]
+
   if (isFetching || isPending) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -90,97 +215,14 @@ export default function TechniciansPage() {
         )}
       </div>
 
-      <div className="flex items-center mb-6 gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input type="search" placeholder="Search technicians..." className="w-full pl-8" />
-        </div>
-        <Button variant="outline">
-          <Filter className="mr-2 h-4 w-4" /> Filter
-        </Button>
-      </div>
-
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>Turnamen {techData?.name}</CardTitle>
           <CardDescription>Peserta dan panitia dalam turnamen</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Sebagai</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead>Mewakili</TableHead>
-                <TableHead>Alamat</TableHead>
-                <TableHead>Bawa Alat Sendiri</TableHead>
-                <TableHead>Alat yang dibawa</TableHead>
-                <TableHead>Ukuran Baju</TableHead>
-                <TableHead>Tipe Player</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {techData.contestants.length > 0 && techData?.contestants.map((technician: any, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      {technician.playerType === 'INDIVIDUAL' ?
-                        (
-                          <Link to={'/image/'+technician.user.avatar} target="_blank">
-                            <img src={'/image/'+ technician.user.avatar} alt="name" className="w-16 h-16" />
-                          </Link>
-                        )
-                        :
-                        (
-                          <Link to={'/image/'+ technician.logoUrl} target="_blank">
-                            <img src={'/image/'+ technician.logoUrl} alt="name" className="w-16 h-16" />
-                          </Link>
-                        )
-                      }
-                      <div>{technician?.user?.name}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{technician.storeName ?? "-"}</TableCell>
-                  <TableCell>{technician.storeAddress}</TableCell>
-                  <TableCell>{technician.equipmentSource ? 'ya' : 'tidak'}</TableCell>
-                  <TableCell><ul>
-                    {
-                      technician?.equipmentSource &&
-                      technician?.equipmentOwned.map((item: string, index: number) => (
-                        <li key={index}>{index + 1} {item}</li>
-                      ))
-                    }
-                  </ul>
-                  </TableCell>
-                  <TableCell>{technician.shirtSize}</TableCell>
-                  <TableCell>
-                    {technician.playerType}
-                  </TableCell>
-                  <TableCell>
-                    {!technician.isVerified ? 'Belum diverifikasi' : 'Done'}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant={technician.isVerified ? 'destructive' : 'default'} size="sm" onClick={() => update({ id: technician?.id, data: { isVerified: !technician.isVerified } })}>
-                      {technician.isVerified ? "Batalkan Verifikasi" : "Verifikasi Sekarang"}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <DataTable columns={columns} data={techData.contestants} />
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
 
     </main>
