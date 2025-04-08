@@ -66,17 +66,17 @@ export default function TournamentsPage() {
       return response.data;
     },
   })
-  
+
   const enableData = useMemo(() => {
     if (!data) return []
     return groupTournamentsByEvent(data, false)
   }, [data])
-  
+
   const disableData = useMemo(() => {
     if (!data) return []
     return groupTournamentsByEvent(data, true)
   }, [data])
-  
+
 
   const { mutate: deleteMutation } = useMutation({
 
@@ -195,7 +195,7 @@ export default function TournamentsPage() {
             <Card className="my-4">
               <CardHeader>
                 <div className="flex">
-                  <img src={"data:image/png;base64," + item?.event?.logo} className="w-32 h-32" />
+                  <img src={'/image/'+ item?.event?.eventLogoUrl} className="w-32 h-32 mr-4" />
                   <div>
 
                     <CardTitle>{item.event?.name}</CardTitle>
