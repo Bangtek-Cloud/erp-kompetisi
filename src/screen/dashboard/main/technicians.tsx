@@ -128,14 +128,14 @@ export default function TechniciansPage() {
                     <div className="flex items-center gap-3">
                       {technician.playerType === 'INDIVIDUAL' ?
                         (
-                          <Link to={import.meta.env.VITE_BASE_S3 + technician.user.avatar} target="_blank">
-                            <img src={import.meta.env.VITE_BASE_S3 + technician.user.avatar} alt="name" className="w-16 h-16" />
+                          <Link to={'/image/'+technician.user.avatar} target="_blank">
+                            <img src={'/image/'+ technician.user.avatar} alt="name" className="w-16 h-16" />
                           </Link>
                         )
                         :
                         (
-                          <Link to={import.meta.env.VITE_BASE_S3 + technician.logoUrl} target="_blank">
-                            <img src={import.meta.env.VITE_BASE_S3 + technician.logoUrl} alt="name" className="w-16 h-16" />
+                          <Link to={'/image/'+ technician.logoUrl} target="_blank">
+                            <img src={'/image/'+ technician.logoUrl} alt="name" className="w-16 h-16" />
                           </Link>
                         )
                       }
