@@ -183,11 +183,11 @@ export default function SchedulePage() {
                                                 </Button>
                                             </CardFooter>
                                             <div className="flex mt-10 justify-center gap-2">
-                                                <Link to={'/apps/schedule/update/' + event.id}>
+                                                {isAdmin &&( <Link to={'/apps/schedule/update/' + event.id}>
                                                     <Button variant={'outline'}>
                                                         Edit
                                                     </Button>
-                                                </Link>
+                                                </Link>)}
                                                 {
                                                     IsSU && (
                                                         <Button variant={'outline'} onClick={() => setDeleteModal({
