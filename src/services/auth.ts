@@ -69,3 +69,22 @@ export const RegisterUser = async (name: string, email: string, password: string
     }
   }
 }
+
+export const updateUser = async (data: any, accessToken: string) => {
+  try {
+      const response = await genericsInstance.put('user/updateMe', data, {
+          headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${accessToken}`,
+          },
+      });
+      return response.data;
+  } catch (error) {
+      if (error instanceof Error) {
+          const axiosError = error as AxiosError<ErrorResponse>;
+          return {
+              error: axiosError.response?.data.error,
+          };
+      }
+  }
+}

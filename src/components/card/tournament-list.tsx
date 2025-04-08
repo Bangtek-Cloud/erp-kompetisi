@@ -5,8 +5,11 @@ import { Badge } from "../ui/badge";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { DateTime } from "luxon";
 import { Button } from "../ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { toast } from "sonner";
 
 interface TournamentListProps {
     tournament: TournamentProps;
@@ -41,6 +44,9 @@ export default function TournamentList({
         () => DateTime.fromISO(tournament.endDate).setLocale("id").toFormat("dd MMM yyyy HH:mm"),
         [tournament.endDate]
     );
+
+    const user = useSelector((state: RootState) => state.auth.user);
+    const navigate = useNavigate()
 
     return (
         <Card key={tournament.id} className={isDisable ? "opacity-50" : ""}>
@@ -103,13 +109,25 @@ export default function TournamentList({
                         <Button size="sm" disabled>
                             Daftar
                         </Button>
-                    ) : (
-                        <Link to={`/apps/tournament/register/${tournament.id}`}>
-                            <Button size="sm">
+                    ) :
+
+                        user?.usingAvatar ?
+                            (
+                                <Link to={`/apps/tournament/register/${tournament.id}`}>
+                                    <Button size="sm">
+                                        Daftar
+                                    </Button>
+                                </Link>
+                            )
+                            :
+                            (<Button size="sm" onClick={() => {
+                                toast.error('Masukan terlebih dahulu foto profil Anda, untuk dijadikan ID Card, anda akan, Anda akan diarahkan ke pengaturan profil dalam 4 detik')
+                                setTimeout(() => {
+                                    navigate('/apps/settings')
+                                }, 4000)
+                            }}>
                                 Daftar
-                            </Button>
-                        </Link>
-                    )
+                            </Button>)
                 }
             </CardFooter>
             <Button variant="link" className="mx-10" size="sm" onClick={() => openTerms(tournament)}>

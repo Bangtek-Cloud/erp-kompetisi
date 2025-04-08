@@ -14,7 +14,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/image': {
-        target: 'http://103.187.146.79:9100',
+        // target: 'http://103.187.146.79:9100',
+        target: 'http://localhost:9100',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/image/, '')
       },
