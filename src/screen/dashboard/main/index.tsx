@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Trophy, DollarSign, Swords } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+// import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Trophy, Swords } from "lucide-react"
+// import { Badge } from "@/components/ui/badge"
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Link } from "react-router"
-import MaintenanceAlert from "@/components/maintenance-alert"
+// import MaintenanceAlert from "@/components/maintenance-alert"
 
 export default function DashboardIndex() {
   return (
     <div className="container mx-auto p-8">
-      <MaintenanceAlert />
+      {/* <MaintenanceAlert /> */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Dashboard</h1>
       </div>
@@ -22,7 +22,7 @@ export default function DashboardIndex() {
               <Trophy className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">3</div>
+              <div className="text-2xl font-bold">2</div>
               <p className="text-xs text-muted-foreground">+1 from last month</p>
             </CardContent>
             <CardFooter>
@@ -33,12 +33,12 @@ export default function DashboardIndex() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Upcoming Matches</CardTitle>
+              <CardTitle className="text-sm font-medium">Active Event</CardTitle>
               <Swords className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24</div>
-              <p className="text-xs text-muted-foreground">Next match in 2 hours</p>
+              <div className="text-2xl font-bold">1</div>
+              <p className="text-xs text-muted-foreground">+1 from last month</p>
             </CardContent>
             <CardFooter>
               <Link to="/apps/matches" className="text-xs text-blue-500 hover:underline">
@@ -46,7 +46,7 @@ export default function DashboardIndex() {
               </Link>
             </CardFooter>
           </Card>
-          <Card>
+          {/* <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -60,11 +60,11 @@ export default function DashboardIndex() {
                 View financial details
               </Link>
             </CardFooter>
-          </Card>
+          </Card> */}
         </div>
       </section>
 
-      <section className="w-full py-6 md:py-10 bg-muted">
+      {/* <section className="w-full py-6 md:py-10 bg-muted">
         <div className="flex flex-col items-start space-y-4">
           <div className="space-y-2">
             <h2 className="text-2xl font-bold tracking-tight">Today's Matches</h2>
@@ -324,7 +324,7 @@ export default function DashboardIndex() {
             </Card>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   )
 }

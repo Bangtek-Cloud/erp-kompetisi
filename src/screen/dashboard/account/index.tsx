@@ -3,76 +3,196 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Switch } from "@/components/ui/switch"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+// import { Switch } from "@/components/ui/switch"
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
+import { updateUser } from "@/services/auth"
+import { logout } from "@/store/feature/authSlice"
 
-export default function AccountSettings () {
+export default function AccountSettings() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const formRef = useRef(null)
+  const dispatch = useDispatch()
+
+
+  const [formData, setFormData] = useState({
+    fullName: user?.name || "",
+    avatar: null as File | null
+  });
+
+  const [preview, setPreview] = useState(user?.avatar)
+
+  useEffect(() => {
+    if (!user) {
+      setFormData({
+        fullName: "",
+        avatar: null,
+      });
+      setPreview("")
+    } else {
+      setFormData({
+        fullName: user.name || "",
+        avatar: null,
+      });
+      if (user?.usingAvatar) {
+        setPreview('/image/' + user?.avatar)
+      } else {
+        setPreview(user?.avatar)
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (!formData.avatar) return;
+
+    const objectUrl = URL.createObjectURL(formData.avatar);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [formData.avatar]);
+
+
+  const handleButtonClick = () => {
+    console.log("Button clicked");
+    if (formRef.current) {
+      console.log("Submitting form via ref");
+      // @ts-ignore
+      formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    } else {
+      console.log("Form ref is null, attempting direct submission");
+      submitForm();
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Submit handler triggered");
+
+    try {
+      await submitForm();
+    } catch (error) {
+      console.error("Error in form submission:", error);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
+
+    if (file) {
+      if (!file.type.startsWith("image/")) {
+        alert("Format file tidak valid! Silakan unggah gambar.");
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, avatar: file }));
+    } else {
+      setFormData((prev) => ({ ...prev, avatar: null }));
+    }
+  };
+
+  const submitForm = async () => {
+    setIsSubmitting(true)
+    const data = new FormData();
+    data.append('fullName', formData.fullName)
+    if(formData.avatar){
+      data.append('avatar', formData.avatar || "");
+    }
+
+    const response = await updateUser(data, accessToken || "")
+    if (response.error) {
+      toast.error(response.error)
+      setIsSubmitting(false)
+      return
+    }
+    setIsSubmitting(false)
+    toast.success('Berhasil update profil, silahkan login ulang')
+    dispatch(logout())
+  }
+
+  const isFormValid = () => {
+    // Basic validation - must have player type
+    const valid = formData.fullName !== ""
+
+    return valid;
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">System Settings</h1>
-          <Button>Save Changes</Button>
+          <h1 className="text-3xl font-bold">Sistem Akun</h1>
+          {/* <Button>Save Changes</Button> */}
         </div>
 
         <Tabs defaultValue="account" className="w-full mb-8">
           <TabsList>
             <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
+            {/* <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
-            <TabsTrigger value="system">System</TabsTrigger>
+            <TabsTrigger value="system">System</TabsTrigger> */}
           </TabsList>
 
           <TabsContent value="account" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-                <CardDescription>Manage your account information</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Personal Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input id="name" defaultValue="Admin User" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" defaultValue="admin@techcomp.com" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" defaultValue="+62 123 4567 890" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="role">Role</Label>
-                      <Input id="role" defaultValue="Administrator" disabled />
-                    </div>
-                  </div>
-                </div>
+            <form ref={formRef} onSubmit={handleFormSubmit} encType="multipart/form-data">
 
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Profile Picture</h3>
-                  <div className="flex items-center gap-4">
-                    <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center text-2xl font-bold">
-                      AD
-                    </div>
-                    <div className="space-y-2">
-                      <Button variant="outline">Upload New Picture</Button>
-                      <p className="text-xs text-muted-foreground">Recommended: Square image, at least 300x300px</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pengaturan Akun</CardTitle>
+                  <CardDescription>Atur dan perbarui informasi akun Anda dengan mudah</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Informasi Pribadi</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Nama Lengkap</Label>
+                        <Input id="name" value={formData.fullName} onChange={(e) => setFormData((prev) => ({ ...prev, fullName: e.target.value }))} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Alamat Email</Label>
+                        <Input disabled type="email" value={user?.email} />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button>Save Account Settings</Button>
-              </CardFooter>
-            </Card>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Foto Profil</h3>
+                    <div className="flex items-center gap-4">
+                      <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center text-2xl font-bold">
+                        {
+                          preview &&
+                          (
+                            <img src={preview} className="h-24 w-24 rounded-full bg-muted flex items-center justify-center" />
+                          )
+                        }
+                      </div>
+                      <div className="space-y-2">
+                        <Input
+                          className="mt-2 block w-full border border-gray-300 rounded p-2"
+                          id="logo"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button disabled={!isFormValid()} onClick={handleButtonClick}>{isSubmitting ? 'Loading...' : 'Simpan Pengaturan Akun'}</Button>
+                </CardFooter>
+              </Card>
+            </form>
           </TabsContent>
 
-          <TabsContent value="appearance" className="mt-6">
+          {/* <TabsContent value="appearance" className="mt-6">
             <Card>
               <CardHeader>
                 <CardTitle>Appearance Settings</CardTitle>
@@ -349,7 +469,7 @@ export default function AccountSettings () {
                 <Button>Save System Settings</Button>
               </CardFooter>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs>
       </main>
     </div>

@@ -68,7 +68,8 @@ export default function RegisterForTournament() {
         equipmentOwned: [""],
         storeAddress: "",
         optionPrice: 0,
-        shirtSize: ''
+        shirtSize: '',
+        phoneNo: ''
     });
 
     const [preview, setPreview] = useState<string | null>(null);
@@ -88,21 +89,21 @@ export default function RegisterForTournament() {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
-    
+
         if (file) {
             // Validasi format file (hanya gambar)
             if (!file.type.startsWith("image/")) {
                 alert("Format file tidak valid! Silakan unggah gambar.");
                 return;
             }
-    
+
             // Langsung simpan file tanpa cropping atau resize
             setFormData((prev) => ({ ...prev, logo: file }));
         } else {
             setFormData((prev) => ({ ...prev, logo: null }));
         }
     };
-    
+
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -128,6 +129,7 @@ export default function RegisterForTournament() {
         data.append("usingLogo", formData.usingLogo);
         data.append("price", totalPrice.toString());
         data.append('userId', user?.id || "");
+        data.append('phoneNo', formData.phoneNo)
         data.append("storeAddress", formData.storeAddress);
         if (formData.playerType === "INDIVIDUAL") {
             data.append("storeName", "");
@@ -193,11 +195,12 @@ export default function RegisterForTournament() {
             formData.playerType !== "" &&
             formData.optionPrice !== 0 &&
             formData.equipmentSource !== "" &&
+            formData.phoneNo !== "" &&
             acceptTerms &&
             isSubmitting === false &&
             formData.storeAddress !== "" &&
             formData.shirtSize !== "" &&
-            (formData.usingLogo !== "true" || (formData.usingLogo === "true" && formData.logo !== null)) &&
+            (formData.playerType === "INDIVIDUAL" || (formData.usingLogo !== "true" || (formData.usingLogo === "true" && formData.logo !== null))) &&
             (formData.playerType === "INDIVIDUAL" || (formData.storeName.trim() !== ""));
 
         return valid;
@@ -285,7 +288,6 @@ export default function RegisterForTournament() {
                         </p>
                     </div>
 
-                    {/* Use ref for the form element */}
                     <form ref={formRef} onSubmit={handleFormSubmit} encType="multipart/form-data">
                         <div className="mb-4">
                             <Label htmlFor="playerType">Tipe Peserta</Label>
@@ -331,6 +333,26 @@ export default function RegisterForTournament() {
                             </>
                         )
                         }
+                        {
+                            formData.playerType !=='' && formData.playerType !== 'INDIVIDUAL' && (
+                                <div className="mb-4">
+                                    <Label htmlFor="logo">Logo {getName(formData.playerType)}</Label>
+                                    <Input
+                                        className="mt-2 block w-full border border-gray-300 rounded p-2"
+                                        id="logo"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
+
+                                    {preview && (
+                                        <div className="mt-4 flex justify-center">
+                                            <img src={preview} alt="Preview Logo" className="w-40 h-40 object-cover rounded-md border" />
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        }
                         <div className="mb-4">
                             <Label htmlFor="storeAddress">Alamat {getName(formData.playerType)}</Label>
                             <Input
@@ -340,6 +362,19 @@ export default function RegisterForTournament() {
                                 value={formData.storeAddress}
                                 onChange={(e) => setFormData((prev) => ({ ...prev, storeAddress: e.target.value }))}
                             />
+                        </div>
+                        <div className="mb-4">
+                            <Label htmlFor="storeAddress">Nomor Hp</Label>
+                            <div className="flex items-center">
+                                <Input
+                                    className="mt-2 flex-1"
+                                    id="phoneNo"
+                                    type="tel"
+                                    value={formData.phoneNo}
+                                    placeholder="Masukkan nomor telepon"
+                                    onChange={(e) => setFormData((prev) => ({ ...prev, phoneNo: e.target.value }))}
+                                />
+                            </div>
                         </div>
                         <div className="mb-4">
                             <Label htmlFor="equipmentSource">Apakah Anda membawa peralatan sendiri</Label>
@@ -445,22 +480,7 @@ export default function RegisterForTournament() {
                                 <div className="text-xs font-medium mt-4">Biaya tambahan <span className="font-extrabold">{rupiahFormat(tournament.usingLogoPrice)}</span></div>
                             </div>
                         )} */}
-                        <div className="mb-4">
-                            <Label htmlFor="logo">Logo / Foto {'(harus rasio 1:1)'}</Label>
-                            <Input
-                                className="mt-2 block w-full border border-gray-300 rounded p-2"
-                                id="logo"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                            />
-
-                            {preview && (
-                                <div className="mt-4 flex justify-center">
-                                    <img src={preview} alt="Preview Logo" className="w-40 h-40 object-cover rounded-md border" />
-                                </div>
-                            )}
-                        </div>
+                        
                     </form>
 
                     <div className="mb-4">

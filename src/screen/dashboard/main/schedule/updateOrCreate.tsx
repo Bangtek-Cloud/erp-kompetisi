@@ -115,7 +115,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                     rules: JSON.parse(datas.rules) || [],
                     isActive: datas.isActive ?? true
                 }));
-                setPreview(datas.logo)
+                setPreview('/image/' + datas.eventLogoUrl)
                 setLoading(false)
             };
             fetchTournamentData();
@@ -178,7 +178,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                 return
             }
             setIsSubmitting(false)
-            queryClient.invalidateQueries({queryKey: ['events']})
+            queryClient.invalidateQueries({ queryKey: ['events'] })
             navigate('/apps/schedule')
         } else if (actionType === "update" && eventId) {
             const response = await updateEvent(eventId, data, accessToken || "")
@@ -189,7 +189,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
             }
             setIsSubmitting(false)
             toast.success(response.message)
-            queryClient.invalidateQueries({queryKey: ['events']})
+            queryClient.invalidateQueries({ queryKey: ['events'] })
             navigate('/apps/schedule')
         }
     }
@@ -314,7 +314,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                     <div className="grid w-full items-center gap-2 mt-4">
                                         <Label>Event aktif ?</Label>
                                         <div className="flex items-center space-x-2">
-                                            <Switch id="eventDisable" onCheckedChange={() => setFormData((prev) => ({ ...prev, isActive: formData.isActive ? false : true }))} checked={!formData.isActive? false : true} />
+                                            <Switch id="eventDisable" onCheckedChange={() => setFormData((prev) => ({ ...prev, isActive: formData.isActive ? false : true }))} checked={!formData.isActive ? false : true} />
                                             <Label htmlFor="eventDisable">Event ini {!formData.isActive ? 'Dimatikan' : 'Aktif'}</Label>
                                         </div>
                                     </div>
