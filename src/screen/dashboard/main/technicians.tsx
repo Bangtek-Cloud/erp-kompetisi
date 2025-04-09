@@ -162,7 +162,7 @@ export default function TechniciansPage() {
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>,
       cell: ({ row }) => {
-        return row.original.equipmentSource ? 'Sudah Verifikasi' : 'Belum Verifikasi'
+        return row.original.isVerified ? 'Sudah Verifikasi' : 'Belum Verifikasi'
       }
     },
     {
