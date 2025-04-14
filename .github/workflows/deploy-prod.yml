@@ -8,7 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: prod
+    
     steps:
       - name: Checkout kode
         uses: actions/checkout@v4
