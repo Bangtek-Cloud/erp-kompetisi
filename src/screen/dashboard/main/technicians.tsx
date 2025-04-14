@@ -5,10 +5,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { Link, useParams } from "react-router"
-import { getTournamentById, updateContestantById } from "@/services/tournament"
+import { exportDataTournament, getTournamentById, updateContestantById } from "@/services/tournament"
 import { toast } from "sonner"
 import { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/data-table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useState } from "react"
+
 
 
 type TechType = {
@@ -39,6 +47,7 @@ export default function TechniciansPage() {
   const user = useSelector((state: RootState) => state.auth.user);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
+  const [loading, setLoading] = useState(false)
 
   const { data: techData, isFetching } = useQuery({
     queryKey: ['technicians', tournamentId],
@@ -47,6 +56,12 @@ export default function TechniciansPage() {
       return response.data
     },
   })
+
+  const exportData = async (status: string) => {
+    setLoading(true)
+    await exportDataTournament(tournamentId || "", status, accessToken || "")
+    setLoading(false)
+  }
 
   const { mutate: update, isPending } = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
@@ -162,7 +177,7 @@ export default function TechniciansPage() {
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>,
       cell: ({ row }) => {
-        return row.original.equipmentSource ? 'Sudah Verifikasi' : 'Belum Verifikasi'
+        return row.original.isVerified ? 'Sudah Verifikasi' : 'Belum Verifikasi'
       }
     },
     {
@@ -179,7 +194,7 @@ export default function TechniciansPage() {
     }
   ]
 
-  if (isFetching || isPending) {
+  if (isFetching || isPending || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="loader"></div>
@@ -203,11 +218,21 @@ export default function TechniciansPage() {
     <main className="flex-1 container mx-auto p-8">
       <div className="flex md:flex-row gap-4 flex-col justify-between md:items-center mb-8">
         <h1 className="text-3xl font-bold text-left">Peserta</h1>
-        {isAdmin && (
+        {isAdmin && !isFetching && (
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="mr-2 h-4 w-4" /> Export
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button variant={'secondary'}>
+                  <Download /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={()=> exportData('semua')}>Semua data</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=> exportData('true')}>Hanya yang sudah verifikasi</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=> exportData('false')}>hanya yang belum verifikasi</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button>
               <Plus className="mr-2 h-4 w-4" /> Add Technician
             </Button>
