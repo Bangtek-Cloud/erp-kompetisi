@@ -309,7 +309,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                             </div>
                                         </div>
                                     ))}
-                                    <Button className="dark:text-secondary text-black" variant={'outline'} onClick={() => setFormData((prev) => ({ ...prev, rules: [...formData.rules, ""] }))}><Plus /> Tambah Aturan</Button>
+                                    <Button type="button" className="dark:text-secondary text-black" variant={'outline'} onClick={() => setFormData((prev) => ({ ...prev, rules: [...formData.rules, ""] }))}><Plus /> Tambah Aturan</Button>
 
                                     <div className="grid w-full items-center gap-2 mt-4">
                                         <Label>Event aktif ?</Label>

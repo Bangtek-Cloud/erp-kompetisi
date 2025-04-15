@@ -25,13 +25,15 @@ import TournamentUpdatePage from "@/screen/dashboard/main/tournament/update";
 import ConfirmTournament from "@/screen/dashboard/main/tournament/confirm";
 import NotificationPage from "@/screen/dashboard/main/notification";
 import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate";
+import AboutUsPage from "@/screen/landing/about";
 
 export default function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<LandingLayout />}>
+                <Route path="/" element={<LandingLayout />} errorElement={<h1>Terjadi kesalahan</h1>} loader={() => new Promise(resolve => setTimeout(resolve, 1000))}>
                     <Route index element={<LandingHome />} />
+                    <Route path="about" element={<AboutUsPage />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Route>
 
