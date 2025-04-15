@@ -145,7 +145,7 @@ export default function SchedulePage() {
                                                     <div className="flex mx-auto">
                                                         {
                                                             event?.eventLogoUrl && (
-                                                                <img src={'/image/' + event?.eventLogoUrl} className="w-32 h-32" />
+                                                                <img src={import.meta.env.VITE_BASE_S3 +  event?.eventLogoUrl} className="w-32 h-32" />
                                                             )
                                                         }
                                                     </div>
@@ -215,7 +215,7 @@ export default function SchedulePage() {
                                                                 <div className="flex mx-auto">
                                                                     {
                                                                         event?.eventLogoUrl && (
-                                                                            <img src={'/image/' + event?.eventLogoUrl} className="w-32 h-32" />
+                                                                            <img src={import.meta.env.VITE_BASE_S3 +  event?.eventLogoUrl} className="w-32 h-32" />
                                                                         )
                                                                     }
                                                                 </div>

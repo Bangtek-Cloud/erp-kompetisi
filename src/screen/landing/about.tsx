@@ -30,7 +30,7 @@ export default function AboutUsPage() {
                     </div>
                     <div className="p-6">
                         <img
-                            src="https://picsum.photos/600/400"
+                            src="/images/1.jpg"
                             alt="About BANGTEK"
                             className="rounded-xl shadow-md w-full h-auto object-cover"
                         />
@@ -84,9 +84,14 @@ export default function AboutUsPage() {
                     </div>
                     <div className="p-6">
                         <img
-                            src="https://images.unsplash.com/photo-1605379399642-870262d3d051"
+                            src="/B-dark.png"
                             alt="Jago Repair Competition"
-                            className="rounded-xl shadow-md w-full h-auto object-cover"
+                            className="rounded-xl shadow-md w-full h-auto object-cover dark:block hidden"
+                        />
+                         <img
+                            src="/B-light.png"
+                            alt="Jago Repair Competition"
+                            className="rounded-xl shadow-md w-full h-auto object-cover block dark:hidden"
                         />
                     </div>
                 </Card>

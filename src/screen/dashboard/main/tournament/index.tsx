@@ -195,7 +195,7 @@ export default function TournamentsPage() {
             <Card className="my-4">
               <CardHeader>
                 <div className="flex">
-                  <img src={'/image/'+ item?.event?.eventLogoUrl} className="w-32 h-32 mr-4" />
+                  <img src={import.meta.env.VITE_BASE_S3 + item?.event?.eventLogoUrl} className="w-32 h-32 mr-4" />
                   <div>
 
                     <CardTitle>{item.event?.name}</CardTitle>
