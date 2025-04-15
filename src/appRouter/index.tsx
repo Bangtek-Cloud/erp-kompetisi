@@ -26,6 +26,8 @@ import ConfirmTournament from "@/screen/dashboard/main/tournament/confirm";
 import NotificationPage from "@/screen/dashboard/main/notification";
 import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate";
 import AboutUsPage from "@/screen/landing/about";
+import TermsPage from "@/screen/landing/terms";
+import PrivacyPage from "@/screen/landing/privacy";
 
 export default function AppRouter() {
     return (
@@ -34,6 +36,8 @@ export default function AppRouter() {
                 <Route path="/" element={<LandingLayout />} errorElement={<h1>Terjadi kesalahan</h1>} loader={() => new Promise(resolve => setTimeout(resolve, 1000))}>
                     <Route index element={<LandingHome />} />
                     <Route path="about" element={<AboutUsPage />} />
+                    <Route path="terms" element={<TermsPage />} />
+                    <Route path="privacy" element={<PrivacyPage />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Route>
 
