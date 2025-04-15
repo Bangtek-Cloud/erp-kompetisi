@@ -40,7 +40,7 @@ export default function AccountSettings() {
         avatar: null,
       });
       if (user?.usingAvatar) {
-        setPreview('/image/' + user?.avatar)
+        setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
       } else {
         setPreview(user?.avatar)
       }
