@@ -32,7 +32,6 @@ jobs:
           build-args: |
             NODE_ENV=staging
 
-
       - name: Deploy with Docker
         uses: appleboy/ssh-action@v0.1.10
         with:
