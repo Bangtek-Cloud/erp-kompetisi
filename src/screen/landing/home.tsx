@@ -15,9 +15,9 @@ export default function LandingHome() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Fitur Canggih</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Program Unggulan</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Semua yang Anda butuhkan untuk mengelola kompetisi teknisi dengan transparansi penuh!
+                Melalui program unggulan seperti "Jago Repair Championship", BANGTEK ingin melahirkan generasi teknis
                 </p>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function LandingHome() {
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Upcoming Tournaments</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Event Akan datang</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Join our exciting 1vs1 technician competitions
                 </p>
