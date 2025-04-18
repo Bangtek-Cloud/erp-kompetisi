@@ -277,6 +277,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                         accept="image/*"
                                         onChange={handleFileChange}
                                     />
+                                    <span className="text-xs font-light">ukuran gambar maksimal 10mb</span>
 
                                     {preview && (
                                         <div className="mt-4 flex justify-center">
