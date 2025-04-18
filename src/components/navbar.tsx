@@ -39,6 +39,14 @@ const routeList: RouteProps[] = [
         href: "/about",
         label: "About Us",
     },
+    {
+        href: "/terms",
+        label: "Syarat & Ketentuan",
+    },
+    {
+        href: "/privacy",
+        label: "Kebijakan Privasi",
+    },
 ];
 
 export const Navbar = () => {
