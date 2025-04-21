@@ -19,8 +19,10 @@ import { loginUser } from "@/services/auth"
 import { useDispatch } from "react-redux"
 import { loginSuccess } from "@/store/feature/authSlice"
 import { useState } from "react"
+import { useAuth } from "@/hooks/useAuth"
 
 export default function LoginPage() {
+    const { signIn } = useAuth()
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -34,23 +36,11 @@ export default function LoginPage() {
 
     async function onSubmit(values: z.infer<typeof userLoginSchema>) {
         setIsSubmitting(true)
-        try {
-            const data = await loginUser(values.email, values.password)
-            if (data.error) {
-                toast.error(data.error)
-            }
-            else {
-                dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
-                navigate('/apps')
-            }
-        } catch (e) {
-            if (e instanceof Error) {
-                toast.error(e.message)
-            }
+        const isSuccess = await signIn(values.email, values.password)
+        if (isSuccess) {
+            navigate('/apps')
         }
-        finally {
-            setIsSubmitting(false)
-        }
+        setIsSubmitting(false)
     }
 
     return (

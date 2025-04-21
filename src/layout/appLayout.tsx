@@ -1,29 +1,16 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/header"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-import { RootState } from "@/store";
 import { logout } from "@/store/feature/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router"
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
 import PendingTransaction from "@/components/pending-transaction";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity
-    }
-  }
-})
+import useAuthStore from "@/store/feature/authStand";
 
 export default function AppsLayout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user } = useAuthStore();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -31,8 +18,6 @@ export default function AppsLayout() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={import.meta.env.NODE_ENV !== 'production' ? true : false} />
       <SidebarProvider>
         <AppSidebar user={user || null} logout={handleLogout} />
         <SidebarInset>
@@ -50,7 +35,6 @@ export default function AppsLayout() {
           </div>
         </SidebarInset>
       </SidebarProvider>
-    </QueryClientProvider>
   )
 }
 

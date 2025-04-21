@@ -15,8 +15,16 @@ genericsInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response.status === 440) {
+      window.dispatchEvent(new CustomEvent('authError', { detail: { message: 'Sesi Anda telah berakhir. Silakan login kembali.' } }));
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      (window as any).Toastify({
+        text: "Sesi Anda telah berakhir. Silakan login kembali.",
+        duration: 3000,
+        style: {
+          background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        },
+      }).showToast();
       setTimeout(() => {
         window.location.href = "/auth";
       }, 3000);

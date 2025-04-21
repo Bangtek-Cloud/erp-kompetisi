@@ -1,13 +1,11 @@
 import { getPendingTournaments } from "@/services/tournament";
-import { RootState } from "@/store";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { MoveRight } from "lucide-react";
 import { Link } from "react-router";
-
+import useAuthStore from "@/store/feature/authStand";
 export default function PendingTransaction() {
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+    const { accessToken } = useAuthStore();
     const { data, error } = useQuery({
         queryKey: ["pendingTransaction"],
         queryFn: async () => {

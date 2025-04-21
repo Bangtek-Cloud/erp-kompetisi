@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Label } from "@/components/ui/label";
 import { createParticipant, getTournamentById } from "@/services/tournament";
 import { useNavigate, useParams } from "react-router";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     Alert,
@@ -35,13 +33,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { rupiahFormat } from "@/lib/utils";
 import { toast } from "sonner";
+import useAuthStore from "@/store/feature/authStand";
 
 export default function RegisterForTournament() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { tournamentId: id } = useParams();
-    const user = useSelector((state: RootState) => state.auth.user);
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+    const { user, accessToken } = useAuthStore();
     const formRef = useRef(null);
 
     const { isPending, error, data: tournament } = useQuery({
