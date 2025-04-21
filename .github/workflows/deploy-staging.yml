@@ -1,32 +1,45 @@
-name: Build and deploy to staging
+name: Deploy Web to Beta Server
 
 on:
-    push:
-      branches:
-         - 'staging/**'
+  push:
+    branches:
+      - beta-staging
 
 jobs:
-    build:
-        runs-on: ubuntu-22.04
-        steps:
-            - uses: actions/checkout@v4
-            - name: Install bun
-              run: npm install -g bun
-            - name: Install dependencies
-              run: bun install
-            - name: Build
-              run: bun run build
-            - name: Deploy to Netlify
-              uses: nwtgck/actions-netlify@v3.0
-              with:
-                publish-dir: './dist'
-                github-token: ${{ secrets.GITHUB_TOKEN }}
-                deploy-message: "Deploy from GitHub Actions"
-                enable-pull-request-comment: false
-                enable-commit-comment: true
-                overwrites-pull-request-comment: true
-                production-deploy: true
-              env:
-                NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-                NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-              timeout-minutes: 30
+  deploy:
+    runs-on: ubuntu-latest
+    environment: beta
+
+    steps:
+      - name: Checkout kode
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login ke Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build dan Push Image Frontend ERP
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend-erp:beta-latest
+          build-args: |
+            NODE_ENV=staging
+
+      - name: Deploy with Docker
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_SECRET }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-erp:beta-latest
+            cd frontend-erp
+            docker compose down
+            docker compose up -d

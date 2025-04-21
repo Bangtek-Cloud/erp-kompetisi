@@ -101,7 +101,7 @@ export default function TechniciansPage() {
         const usingAvatar = row.original.user.usingAvatar
         const avatar = row.original.user.avatar
         return (
-          <img src={usingAvatar ? '/image/' + avatar : avatar} className="w-24 h-24" />
+          <img src={usingAvatar ? import.meta.env.VITE_BASE_S3 +  avatar : avatar} className="w-24 h-24" />
         )
       }
     },

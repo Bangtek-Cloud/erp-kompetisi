@@ -115,7 +115,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                     rules: JSON.parse(datas.rules) || [],
                     isActive: datas.isActive ?? true
                 }));
-                setPreview('/image/' + datas.eventLogoUrl)
+                setPreview(import.meta.env.VITE_BASE_S3 + datas.eventLogoUrl)
                 setLoading(false)
             };
             fetchTournamentData();
@@ -277,6 +277,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                         accept="image/*"
                                         onChange={handleFileChange}
                                     />
+                                    <span className="text-xs font-light">ukuran gambar maksimal 10mb</span>
 
                                     {preview && (
                                         <div className="mt-4 flex justify-center">
@@ -309,7 +310,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                             </div>
                                         </div>
                                     ))}
-                                    <Button className="dark:text-secondary text-black" variant={'outline'} onClick={() => setFormData((prev) => ({ ...prev, rules: [...formData.rules, ""] }))}><Plus /> Tambah Aturan</Button>
+                                    <Button type="button" className="dark:text-secondary text-black" variant={'outline'} onClick={() => setFormData((prev) => ({ ...prev, rules: [...formData.rules, ""] }))}><Plus /> Tambah Aturan</Button>
 
                                     <div className="grid w-full items-center gap-2 mt-4">
                                         <Label>Event aktif ?</Label>

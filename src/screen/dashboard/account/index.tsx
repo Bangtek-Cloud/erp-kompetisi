@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import imageCompression from "browser-image-compression";
 // import { Switch } from "@/components/ui/switch"
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useDispatch, useSelector } from "react-redux"
@@ -11,6 +12,7 @@ import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { updateUser } from "@/services/auth"
 import { logout } from "@/store/feature/authSlice"
+import { Progress } from "@/components/ui/progress"
 
 export default function AccountSettings() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -18,6 +20,7 @@ export default function AccountSettings() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const formRef = useRef(null)
   const dispatch = useDispatch()
+  const [uploadProgress, setUploadProgress] = useState(0)
 
 
   const [formData, setFormData] = useState({
@@ -40,7 +43,7 @@ export default function AccountSettings() {
         avatar: null,
       });
       if (user?.usingAvatar) {
-        setPreview('/image/' + user?.avatar)
+        setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
       } else {
         setPreview(user?.avatar)
       }
@@ -80,8 +83,8 @@ export default function AccountSettings() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files.length > 0 ? e.target.files[0] : null;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
     if (file) {
       if (!file.type.startsWith("image/")) {
@@ -89,7 +92,30 @@ export default function AccountSettings() {
         return;
       }
 
-      setFormData((prev) => ({ ...prev, avatar: file }));
+      let compressedFile = file;
+
+      // Jika file lebih dari 5MB, lakukan kompresi
+      if (file.size > 5 * 1024 * 1024) {
+        try {
+          const options = {
+            maxSizeMB: 2,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+            onProgress: (progress: number) => {
+              setUploadProgress(progress);
+            },
+          };
+
+          compressedFile = await imageCompression(file, options);
+          toast.info("Gambar berhasil dikompres sebelum upload.");
+        } catch (err) {
+          console.error("Gagal kompres gambar:", err);
+          toast.error("Gagal kompres gambar.");
+        }
+      }
+
+      setFormData((prev) => ({ ...prev, avatar: compressedFile }));
+
     } else {
       setFormData((prev) => ({ ...prev, avatar: null }));
     }
@@ -99,7 +125,7 @@ export default function AccountSettings() {
     setIsSubmitting(true)
     const data = new FormData();
     data.append('fullName', formData.fullName)
-    if(formData.avatar){
+    if (formData.avatar) {
       data.append('avatar', formData.avatar || "");
     }
 
@@ -181,13 +207,24 @@ export default function AccountSettings() {
                           accept="image/*"
                           onChange={handleFileChange}
                         />
+                        <span className="text-xs">Ukuran file maksimal 10Mb</span>
                       </div>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button disabled={!isFormValid()} onClick={handleButtonClick}>{isSubmitting ? 'Loading...' : 'Simpan Pengaturan Akun'}</Button>
+                  <Button
+                    type="button"
+                    disabled={!isFormValid()}
+                    onClick={handleButtonClick}
+                  >{isSubmitting ? 'Loading...' : 'Simpan Pengaturan Akun'}</Button>
                 </CardFooter>
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <div className="pt-2">
+                    <Progress value={uploadProgress} />
+                    <p className="text-xs text-muted-foreground">{Math.round(uploadProgress)}%</p>
+                  </div>
+                )}
               </Card>
             </form>
           </TabsContent>

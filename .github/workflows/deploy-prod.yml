@@ -8,7 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: prod
+    
     steps:
       - name: Checkout kode
         uses: actions/checkout@v4
@@ -28,6 +29,8 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
+          build-args: |
+            NODE_ENV=production
 
 
       - name: Deploy with Docker
@@ -35,7 +38,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_SECRET }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend-erp:latest
             cd frontend-erp

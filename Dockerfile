@@ -4,6 +4,9 @@ FROM oven/bun:latest
 # Set working directory
 WORKDIR /app
 
+ARG NODE_ENV=production
+ENV NODE_ENV $NODE_ENV
+
 # Copy file package.json dan bun.lockb untuk menginstal dependensi
 COPY package.json bun.lockb ./
 
@@ -14,7 +17,7 @@ RUN bun install && bun add typescript --global
 COPY . .
 
 # Build aplikasi TypeScript terlebih dahulu, kemudian Vite
-RUN bun run build --mode production
+RUN bun run build --mode $NODE_ENV
 
 # Expose port untuk aplikasi, biasanya Vite di port 3000, sesuaikan jika berbeda
 EXPOSE 8080
