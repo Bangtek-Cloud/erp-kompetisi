@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/store/feature/authStand";
 import { useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
-
+import LoadingSolder from "./loading-solder";
 
 const ProtectedRoute = () => {
   const { accessToken } = useAuthStore();
@@ -18,9 +18,7 @@ const ProtectedRoute = () => {
 
   if (loadingUser) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <img src="/images/solder.svg" alt="solder" className="w-32 h-32 animate-spin" />
-      </div>
+      <LoadingSolder />
     )
   }
 
