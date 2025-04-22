@@ -1,15 +1,3 @@
-import {
-  Calendar,
-  // CreditCard,
-  // DollarSign,
-  // FileText,
-  // HelpCircleIcon,
-  LayoutDashboardIcon,
-  // SettingsIcon,
-  // Sword,
-  Trophy,
-  // User,
-} from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import {
   Sidebar,
@@ -19,110 +7,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
-// import { NavNormal } from "./nav-normal"
+import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
-// import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router"
 import { IUser } from "@/types/user"
+import { menuAllUser, menuManagement } from "@/constant/menu"
+import useAuthStore from "@/store/feature/authStand";
 
 interface sidebarProps {
   user: IUser | null,
   logout: () => void
 }
 
-const data = {
-  user: {
-    name: "Kevin Doe",
-    email: "kevin@example.com",
-    avatar: "https://api.dicebear.com/9.x/fun-emoji/svg?seed=Christopher",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/apps/home",
-      icon: LayoutDashboardIcon,
-    },
-    // {
-    //   title: "Matches",
-    //   url: "/apps/match",
-    //   icon: Sword,
-    // },
-    {
-      title: "Events",
-      url: "/apps/schedule",
-      icon: Calendar,
-    },
-    {
-      title: "Tournaments",
-      url: "/apps/tournament",
-      icon: Trophy,
-    },
-    // {
-    //   title: "Peserta",
-    //   url: "/apps/technician",
-    //   icon: User,
-    // },
-  ],
-  // finance: [
-  //   {
-  //     title: "Financial Dashboard",
-  //     icon: DollarSign,
-  //     url: "/apps/finance/home",
-  //   },
-  //   {
-  //     title: "Transactions",
-  //     icon: CreditCard,
-  //     url: "/apps/finance/transactions",
-  //   },
-  //   {
-  //     title: "Financial Reports",
-  //     icon: FileText,
-  //     url: "/apps/finance/reports",
-  //   },
-  //   {
-  //     title: "Public Reports",
-  //     icon: FileText,
-  //     url: "/apps/finance/public",
-  //   },
-  //   {
-  //     title: "Donors",
-  //     icon: DollarSign,
-  //     url: "/apps/finance/donors",
-  //   },
-  // ],
-  // management: [
-  //   {
-  //     title: "Leaderboard",
-  //     icon: DollarSign,
-  //     url: "/apps/leaderboard",
-  //   },
-  //   {
-  //     title: "Reports",
-  //     icon: CreditCard,
-  //     url: "/apps/reports",
-  //   },
-  // ],
-  // navSecondary: [
-  //   {
-  //     title: "Settings",
-  //     url: "/apps/settings",
-  //     icon: SettingsIcon,
-  //   },
-  //   {
-  //     title: "Get Help",
-  //     url: "#",
-  //     icon: HelpCircleIcon,
-  //   },
-  // ],
-}
-
 export function AppSidebar(props: sidebarProps) {
+  const { user } = useAuthStore();
+  const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
   return (
     <Sidebar collapsible="offcanvas">
-      <SidebarHeader  className="bg-background">
-        <SidebarMenu  className="bg-background">
-          <SidebarMenuItem  className="bg-background">
+      <SidebarHeader className="bg-background">
+        <SidebarMenu className="bg-background">
+          <SidebarMenuItem className="bg-background">
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
@@ -135,12 +41,16 @@ export function AppSidebar(props: sidebarProps) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SidebarTrigger className="absolute right-2 top-2" />
       </SidebarHeader>
       <SidebarContent className="bg-background">
-        <NavMain items={data.navMain} />
+        <NavMain items={menuAllUser} />
         {/* <NavNormal nameMenu="Finance" items={data.finance} />
         <NavNormal nameMenu="Management" items={data.management} />
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        {isAdmin && (
+           <NavNormal nameMenu="Management" items={menuManagement} />
+        )}
       </SidebarContent>
       <SidebarFooter className="bg-background">
         <NavUser user={props.user} logout={props.logout} />

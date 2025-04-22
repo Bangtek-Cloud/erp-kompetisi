@@ -1,37 +1,28 @@
-import { fetchUser } from "@/services/auth";
-import { RootState } from "@/store";
-import { setUser } from "@/store/feature/authSlice";
+import { useAuth } from "@/hooks/useAuth";
+import useAuthStore from "@/store/feature/authStand";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router";
-import { toast } from "sonner";
-
+import LoadingSolder from "./loading-solder";
 
 const ProtectedRoute = () => {
-  const dispatch = useDispatch();
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { accessToken } = useAuthStore();
+  const { getUser, loadingUser } = useAuth();
 
   useEffect(() => {
-    if (!accessToken || user) return;
-   const getUser = async () => {
-     const user = await fetchUser(accessToken || "");
-     if(user.error){
-      toast.error(user.error)
-      return
-    } else {
-       dispatch(setUser(user));
-    }
-   }
-
-   getUser();
-  }, [accessToken, dispatch]);
+    getUser()
+  }, [])
 
   if (!accessToken) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/auth/login" replace />
   }
 
-  return <Outlet />;
+  if (loadingUser) {
+    return (
+      <LoadingSolder />
+    )
+  }
+
+  return <Outlet />
 };
 
 export default ProtectedRoute;

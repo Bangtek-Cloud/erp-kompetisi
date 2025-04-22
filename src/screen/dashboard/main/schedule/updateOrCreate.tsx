@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router";
@@ -14,14 +12,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { createEvent, getEventById, updateEvent } from "@/services/event";
-
+import useAuthStore from "@/store/feature/authStand";
 interface EventUpdateOrCreateProps {
     actionType: "create" | "update";
 }
 
 export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateProps) {
     const { eventId } = useParams<{ eventId?: string }>();
-    const { accessToken } = useSelector((state: RootState) => state.auth);
+    const { accessToken } = useAuthStore();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const formRef = useRef(null);
