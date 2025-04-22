@@ -8,10 +8,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import useAuthStore from '@/store/feature/authStand';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { WEB_TYPE } from '@/constant/webType';
 import { DateTime } from "luxon";
 import { useNavigate } from 'react-router';
 import { deleteWebsiteRoute, getAllWebRoute } from '@/services/webRoute';

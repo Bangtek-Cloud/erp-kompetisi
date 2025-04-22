@@ -1,19 +1,15 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/header"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-import { logout } from "@/store/feature/authSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router"
 import PendingTransaction from "@/components/pending-transaction";
 import useAuthStore from "@/store/feature/authStand";
 
 export default function AppsLayout() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
   const handleLogout = () => {
-    dispatch(logout());
     navigate("/auth/login");
   };
 
