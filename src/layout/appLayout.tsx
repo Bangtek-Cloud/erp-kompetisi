@@ -7,30 +7,31 @@ import useAuthStore from "@/store/feature/authStand";
 
 export default function AppsLayout() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, zusLogout } = useAuthStore();
 
   const handleLogout = () => {
+    zusLogout()
     navigate("/auth/login");
   };
 
   return (
-      <SidebarProvider>
-        <AppSidebar user={user || null} logout={handleLogout} />
-        <SidebarInset>
-          <SiteHeader />
-          <div className="flex flex-1 flex-col">
-            <PendingTransaction />
-            <Outlet />
-            <footer className="border-t p-6">
-              <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-                <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                  © 2025 Bangtek ERP. All rights reserved - Kepsgurih
-                </p>
-              </div>
-            </footer>
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+    <SidebarProvider>
+      <AppSidebar user={user || null} logout={handleLogout} />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <PendingTransaction />
+          <Outlet />
+          <footer className="border-t p-6">
+            <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+              <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+                © 2025 Bangtek ERP. All rights reserved - Kepsgurih
+              </p>
+            </div>
+          </footer>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 
