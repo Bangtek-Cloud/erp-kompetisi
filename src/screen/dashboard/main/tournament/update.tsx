@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getAllEvents } from "@/services/event";
 import { IEvent } from "@/types/event";
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 
 interface TournamentFormProps {
     actionType: "create" | "update";
@@ -156,9 +157,7 @@ export default function TournamentUpdatePage({ actionType }: TournamentFormProps
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-lg">Loading...</p>
-            </div>
+            <LoadingSolder />
         );
     }
 

@@ -21,6 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DateTime } from "luxon"
 import { IEvent } from "@/types/event"
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder"
 
 function groupTournamentsByEvent(
   data: TournamentProps[],
@@ -147,9 +148,7 @@ export default function TournamentsPage() {
 
   if (isFetching) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-lg">Loading...</p>
-      </div>
+      <LoadingSolder />
     )
   }
 

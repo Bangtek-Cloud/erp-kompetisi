@@ -7,9 +7,8 @@ import { DateTime } from "luxon";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { toast } from "sonner";
+import useAuthStore from "@/store/feature/authStand";
 
 interface TournamentListProps {
     tournament: TournamentProps;
@@ -45,8 +44,10 @@ export default function TournamentList({
         [tournament.endDate]
     );
 
-    const user = useSelector((state: RootState) => state.auth.user);
+    const { user } = useAuthStore()
     const navigate = useNavigate()
+
+    const countVerified = tournament.contestants ? tournament.contestants.filter((a) => a.isVerified).length : 0;
 
     return (
         <Card key={tournament.id} className={isDisable ? "opacity-50" : ""}>
@@ -78,7 +79,7 @@ export default function TournamentList({
                         <MapPin className="mr-1 h-3.5 w-3.5" /> {tournament.location}
                     </div>
                     <div className="flex items-center text-sm text-muted-foreground">
-                        <Users className="mr-1 h-3.5 w-3.5" /> {tournament.contestants?.filter((a) => a.isVerified).length} Partisipan
+                        <Users className="mr-1 h-3.5 w-3.5" /> {countVerified} Partisipan
                     </div>
                     <p className="text-sm mt-2">{tournament.description}</p>
 
@@ -101,35 +102,37 @@ export default function TournamentList({
                 </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline" size="sm" onClick={() => openDetail(tournament)}>
-                    Hadiah
+    <Button variant="outline" size="sm" onClick={() => openDetail(tournament)}>
+        Hadiah
+    </Button>
+    {
+        (tournament.maxParticipants ?? 0) !== 0 && countVerified >= (tournament.maxParticipants ?? 0) ? (
+            <Button size="sm" disabled>
+                Penuh
+            </Button>
+        ) : isDisable ? (
+            <Button size="sm" disabled>
+                Daftar
+            </Button>
+        ) : user?.usingAvatar ? (
+            <Link to={`/apps/tournament/register/${tournament.id}`}>
+                <Button size="sm">
+                    Daftar
                 </Button>
-                {
-                    isDisable ? (
-                        <Button size="sm" disabled>
-                            Daftar
-                        </Button>
-                    ) :
+            </Link>
+        ) : (
+            <Button size="sm" onClick={() => {
+                toast.error('Masukan terlebih dahulu foto profil Anda, untuk dijadikan ID Card, Anda akan diarahkan ke pengaturan profil dalam 4 detik');
+                setTimeout(() => {
+                    navigate('/apps/settings');
+                }, 4000);
+            }}>
+                Daftar
+            </Button>
+        )
+    }
+</CardFooter>
 
-                        user?.usingAvatar ?
-                            (
-                                <Link to={`/apps/tournament/register/${tournament.id}`}>
-                                    <Button size="sm">
-                                        Daftar
-                                    </Button>
-                                </Link>
-                            )
-                            :
-                            (<Button size="sm" onClick={() => {
-                                toast.error('Masukan terlebih dahulu foto profil Anda, untuk dijadikan ID Card, anda akan, Anda akan diarahkan ke pengaturan profil dalam 4 detik')
-                                setTimeout(() => {
-                                    navigate('/apps/settings')
-                                }, 4000)
-                            }}>
-                                Daftar
-                            </Button>)
-                }
-            </CardFooter>
             <Button variant="link" className="mx-10" size="sm" onClick={() => openTerms(tournament)}>
                 Syarat & Ketentuan
             </Button>

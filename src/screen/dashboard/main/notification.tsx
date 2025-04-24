@@ -6,6 +6,7 @@ import useAuthStore from "@/store/feature/authStand";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { Clock, CheckCircle, AlertCircle, CalendarX, Eye, CreditCard } from "lucide-react";
+import LoadingSolder from "@/components/loading-solder";
 
 function NotificationPage() {
     const { accessToken } = useAuthStore();
@@ -23,9 +24,7 @@ function NotificationPage() {
 
     if (isPending) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-lg">Loading...</p>
-            </div>
+           <LoadingSolder />
         );
     }
     return (

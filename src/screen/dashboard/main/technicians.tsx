@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useState } from "react"
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder"
 
 
 type TechType = {
@@ -193,10 +194,7 @@ export default function TechniciansPage() {
 
   if (isFetching || isPending || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loader"></div>
-        <div>Loading</div>
-      </div>
+    <LoadingSolder />
     )
   }
 

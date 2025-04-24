@@ -1,4 +1,4 @@
-import { Calendar, LayoutDashboardIcon, LayoutPanelLeft, LayoutPanelTop, Trophy } from "lucide-react";
+import { Calendar, LayoutDashboardIcon, LayoutPanelLeft, LayoutPanelTop, Trophy, UserCog } from "lucide-react";
 
 export const menuAllUser = [
   {
@@ -28,5 +28,10 @@ export const menuManagement = [
     title: "Website",
     url: "/apps/management/website",
     icon: LayoutPanelTop,
+  },
+  {
+    title: "User",
+    url: "/apps/management/user",
+    icon: UserCog
   }
 ]
