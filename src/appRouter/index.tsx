@@ -28,8 +28,17 @@ import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate
 import AboutUsPage from "@/screen/landing/about";
 import TermsPage from "@/screen/landing/terms";
 import PrivacyPage from "@/screen/landing/privacy";
+import WebsiteIndex from "@/screen/dashboard/management/website";
+import useAuthStore from "@/store/feature/authStand";
+import UpdateOrCreateWebsite from "@/screen/dashboard/management/website/updateOrCreate";
+import WebsiteRouteIndex from "@/screen/dashboard/management/webRouter";
+import UpdateOrCreateWebsiteRoute from "@/screen/dashboard/management/webRouter/updateOrCreate";
+import Userlist from "@/screen/dashboard/management/user";
+import AccountSettingById from "@/screen/dashboard/management/user/updateUser";
 
 export default function AppRouter() {
+    const { user } = useAuthStore();
+    const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
     return (
         <BrowserRouter>
             <Routes>
@@ -70,6 +79,20 @@ export default function AppRouter() {
                         <Route path="reports" element={<ReportsPage />} />
                         <Route path="settings" element={<AccountSettings />} />
                         <Route path="notification" element={<NotificationPage />} />
+
+                        {isAdmin && (
+                            <Route path="management">
+                                <Route path="website" element={<WebsiteIndex />} />
+                                <Route path="website/create" element={<UpdateOrCreateWebsite actionType="create" />} />
+                                <Route path="website/update/:websiteId" element={<UpdateOrCreateWebsite actionType="update" />} />
+                                <Route path="web-route" element={<WebsiteRouteIndex />} />
+                                <Route path="web-route/create" element={<UpdateOrCreateWebsiteRoute actionType="create" />} />
+                                <Route path="web-route/update/:webRouteId" element={<UpdateOrCreateWebsiteRoute actionType="update" />} />
+
+                                <Route path="user" element={<Userlist />} />
+                                <Route path="user/:userId" element={<AccountSettingById />} />
+                            </Route>
+                        )}
 
                         <Route path="finance">
                             <Route index element={<Navigate to="/apps/finance/home" />} />

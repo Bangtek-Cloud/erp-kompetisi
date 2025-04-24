@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search, Filter, Plus } from "lucide-react"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
 import { useMemo, useState } from "react"
 import { deleteTournament, getAllTournaments } from "@/services/tournament"
 import {
@@ -22,7 +20,8 @@ import { Link } from "react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DateTime } from "luxon"
 import { IEvent } from "@/types/event"
-
+import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder"
 
 function groupTournamentsByEvent(
   data: TournamentProps[],
@@ -53,8 +52,7 @@ function groupTournamentsByEvent(
 
 export default function TournamentsPage() {
   const queryClient = useQueryClient();
-  const user = useSelector((state: RootState) => state.auth.user);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken)
+  const { user, accessToken } = useAuthStore();
 
   const { data, isFetching, error } = useQuery({
     queryKey: ['tournaments'],
@@ -150,9 +148,7 @@ export default function TournamentsPage() {
 
   if (isFetching) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-lg">Loading...</p>
-      </div>
+      <LoadingSolder />
     )
   }
 

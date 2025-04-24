@@ -8,8 +8,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { createTournament, getTournamentById, updateTournament } from "@/services/tournament";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
@@ -17,6 +15,7 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
+import useAuthStore from "@/store/feature/authStand";
 
 interface TournamentFormProps {
   isOpen: boolean;
@@ -31,7 +30,7 @@ export default function TournamentDrawer({
   tournamentId,
   actionType,
 }: TournamentFormProps) {
-  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const { accessToken } = useAuthStore()
   const queryClient = useQueryClient();
 
   const [name, setName] = useState("");

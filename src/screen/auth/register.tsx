@@ -16,12 +16,11 @@ import {
 } from "@/components/ui/form"
 import { toast } from "sonner"
 import { RegisterUser } from "@/services/auth"
-import { useDispatch } from "react-redux"
-import { loginSuccess } from "@/store/feature/authSlice"
 import { useState } from "react"
+import useAuthStore from "@/store/feature/authStand";
 
 export default function RegisterPage() {
-    const dispatch = useDispatch();
+    const { zusLoginSuccess } = useAuthStore(); 
     const navigate = useNavigate();
     const form = useForm<z.infer<typeof registerUserSchema>>({
         resolver: zodResolver(registerUserSchema),
@@ -47,7 +46,7 @@ export default function RegisterPage() {
             if (data.error) {
                 toast.error(data.error)
             }
-            dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
+            zusLoginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken });
             navigate('/apps')
 
         } catch (e) {

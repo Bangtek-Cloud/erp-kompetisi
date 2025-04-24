@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Download, ArrowUpDown } from "lucide-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useSelector } from "react-redux"
-import { RootState } from "@/store"
 import { Link, useParams } from "react-router"
 import { exportDataTournament, getTournamentById, updateContestantById } from "@/services/tournament"
 import { toast } from "sonner"
@@ -16,7 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useState } from "react"
-
+import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder"
 
 
 type TechType = {
@@ -44,8 +43,7 @@ type TechType = {
 export default function TechniciansPage() {
   const { tournamentId } = useParams<{ tournamentId?: string }>()
   const queryClient = useQueryClient();
-  const user = useSelector((state: RootState) => state.auth.user);
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const { user, accessToken } = useAuthStore();
   const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
   const [loading, setLoading] = useState(false)
 
@@ -196,10 +194,7 @@ export default function TechniciansPage() {
 
   if (isFetching || isPending || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loader"></div>
-        <div>Loading</div>
-      </div>
+    <LoadingSolder />
     )
   }
 
