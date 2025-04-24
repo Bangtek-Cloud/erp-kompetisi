@@ -34,6 +34,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { rupiahFormat } from "@/lib/utils";
 import { toast } from "sonner";
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 
 export default function RegisterForTournament() {
     const navigate = useNavigate();
@@ -205,7 +206,7 @@ export default function RegisterForTournament() {
     };
 
     if (isPending) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return <LoadingSolder />
     }
 
     if (error) {

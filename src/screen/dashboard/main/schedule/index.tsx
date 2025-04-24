@@ -26,6 +26,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 export default function SchedulePage() {
     const queryClient = useQueryClient();
     const { user, accessToken } = useAuthStore();
@@ -88,11 +89,7 @@ export default function SchedulePage() {
 
     if (isFetching) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold">Loading...</h1>
-                </div>
-            </div>
+            <LoadingSolder />
         )
     }
 

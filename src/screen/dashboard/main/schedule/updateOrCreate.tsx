@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { createEvent, getEventById, updateEvent } from "@/services/event";
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 interface EventUpdateOrCreateProps {
     actionType: "create" | "update";
 }
@@ -202,9 +203,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-lg">Loading...</p>
-            </div>
+            <LoadingSolder />
         );
     }
 

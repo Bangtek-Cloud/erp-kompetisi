@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 interface iP {
     key: number;
     optionPrice: string;
@@ -82,9 +83,7 @@ export default function ConfirmTournament() {
 
     if (tournament.loading && !tournament.data) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="loader"></div>
-            </div>
+            <LoadingSolder />
         );
     }
 

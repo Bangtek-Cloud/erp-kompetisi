@@ -15,6 +15,7 @@ export default function PendingTransaction() {
             }
             return response.data;
         },
+        staleTime: 0
     });
 
     if (!data) {

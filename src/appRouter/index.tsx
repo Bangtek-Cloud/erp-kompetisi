@@ -33,6 +33,8 @@ import useAuthStore from "@/store/feature/authStand";
 import UpdateOrCreateWebsite from "@/screen/dashboard/management/website/updateOrCreate";
 import WebsiteRouteIndex from "@/screen/dashboard/management/webRouter";
 import UpdateOrCreateWebsiteRoute from "@/screen/dashboard/management/webRouter/updateOrCreate";
+import Userlist from "@/screen/dashboard/management/user";
+import AccountSettingById from "@/screen/dashboard/management/user/updateUser";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -86,6 +88,9 @@ export default function AppRouter() {
                                 <Route path="web-route" element={<WebsiteRouteIndex />} />
                                 <Route path="web-route/create" element={<UpdateOrCreateWebsiteRoute actionType="create" />} />
                                 <Route path="web-route/update/:webRouteId" element={<UpdateOrCreateWebsiteRoute actionType="update" />} />
+
+                                <Route path="user" element={<Userlist />} />
+                                <Route path="user/:userId" element={<AccountSettingById />} />
                             </Route>
                         )}
 

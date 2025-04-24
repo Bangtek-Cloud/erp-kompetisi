@@ -6,49 +6,70 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import imageCompression from "browser-image-compression";
 import React, { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
-import { changePasswordUser, updateUser } from "@/services/auth"
+import { fetchUserById, forceUpdatePasswordHandler, forceUpdateUser } from "@/services/auth"
 import { Progress } from "@/components/ui/progress"
 import useAuthStore from "@/store/feature/authStand"
+import { useNavigate, useParams } from "react-router"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { IUser } from "@/types/user"
+import LoadingSolder from "@/components/loading-solder"
 
-export default function AccountSettings() {
-  const {accessToken, user, zusLogout} = useAuthStore()
+export default function AccountSettingById() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate()
+  const { userId } = useParams()
+  const { accessToken } = useAuthStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const formRef = useRef(null)
+  const [user, setUser] = useState<IUser>()
   const [uploadProgress, setUploadProgress] = useState(0)
 
-
   const [formData, setFormData] = useState({
-    fullName: user?.name || "",
+    fullName: "",
     avatar: null as File | null
   });
 
   const [securityData, setSecurityData] = useState({
-    oldPassword: '',
     newPassword: '',
     confirmNewPassword: ''
   })
 
-  const [preview, setPreview] = useState(user?.avatar)
+  const updateQuery = () => {
+    queryClient.invalidateQueries({queryKey: ['user-management']})
+    navigate(-1)
+  }
 
-  useEffect(() => {
-    if (!user) {
-      setFormData({
-        fullName: "",
-        avatar: null,
-      });
-      setPreview("")
-    } else {
-      setFormData({
-        fullName: user.name || "",
-        avatar: null,
-      });
-      if (user?.usingAvatar) {
-        setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
-      } else {
-        setPreview(user?.avatar)
+  const [preview, setPreview] = useState('')
+
+  const {isLoading} = useQuery({
+    queryKey: ['user', userId],
+    queryFn: async () => {
+      const response = await fetchUserById(userId, accessToken)
+      if (response.success) {
+        const user = response.data
+        if (!user) {
+          setFormData({
+            fullName: "",
+            avatar: null,
+          });
+          setPreview("")
+        } else {
+          setUser(user)
+          setFormData({
+            fullName: user.name || "",
+            avatar: null,
+          });
+          if (user?.usingAvatar) {
+            setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
+          } else {
+            setPreview(user?.avatar)
+          }
+        }
+        return response.data
       }
-    }
-  }, [user]);
+    },
+    staleTime: 0
+  })
 
   useEffect(() => {
     if (!formData.avatar) return;
@@ -83,7 +104,7 @@ export default function AccountSettings() {
   const handleFormSubmitSecurity = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    if (securityData.oldPassword === '' || securityData.newPassword === '' || securityData.confirmNewPassword === '') {
+    if (securityData.newPassword === '' || securityData.confirmNewPassword === '') {
       toast.error('Gagal mengubah password, silakan isi semua form');
       setIsSubmitting(false)
       return;
@@ -94,13 +115,13 @@ export default function AccountSettings() {
       return;
     }
     const data = {
-      oldPassword: securityData.oldPassword,
+      userId,
       newPassword: securityData.newPassword
     }
-    const response = await changePasswordUser(data, accessToken)
+    const response = await forceUpdatePasswordHandler(data, accessToken)
     if (response.success) {
-      toast.success('Berhasil update profil, silahkan login ulang')
-      zusLogout()
+      toast.success(`Berhasil mengubah password ${user?.name}`)
+      updateQuery()
     } else {
       toast.error(response.error)
     }
@@ -155,15 +176,15 @@ export default function AccountSettings() {
       data.append('avatar', formData.avatar || "");
     }
 
-    const response = await updateUser(data, accessToken || "")
+    const response = await forceUpdateUser(userId, data, accessToken || "")
     if (response.error) {
       toast.error(response.error)
       setIsSubmitting(false)
       return
     }
     setIsSubmitting(false)
-    toast.success('Berhasil update profil, silahkan login ulang')
-    zusLogout()
+    toast.success(`Berhasil mengubah data profil ${user?.name}`)
+    updateQuery()
   }
 
   const isFormValid = () => {
@@ -173,13 +194,16 @@ export default function AccountSettings() {
     return valid;
   };
 
+  if(isLoading){
+    return <LoadingSolder />
+  }
+
 
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-1 container mx-auto p-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Sistem Akun</h1>
-          {/* <Button>Save Changes</Button> */}
         </div>
 
         <Tabs defaultValue="account" className="w-full mb-8">
@@ -485,10 +509,6 @@ export default function AccountSettings() {
                   <form className="space-y-4" onSubmit={handleFormSubmitSecurity}>
                     <h3 className="text-lg font-medium">Change Password</h3>
                     <div className="space-y-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="current-password">Current Password</Label>
-                        <Input id="current-password" onChange={(e) => setSecurityData({ ...securityData, oldPassword: e.target.value })} type="password" />
-                      </div>
                       <div className="space-y-2">
                         <Label htmlFor="new-password">New Password</Label>
                         <Input id="new-password" onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })} type="password" />
