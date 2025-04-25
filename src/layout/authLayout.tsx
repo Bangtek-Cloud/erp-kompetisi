@@ -1,7 +1,14 @@
 import { GalleryVerticalEnd } from "lucide-react"
 import { Link, Outlet } from "react-router"
+import useAuthStore from "@/store/feature/authStand";
+import { Navigate } from "react-router";
 
 export default function AuthLayout() {
+  const { accessToken } = useAuthStore();
+
+  if (accessToken) {
+    return <Navigate to="/apps" />;
+  }
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">

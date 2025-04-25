@@ -7,8 +7,6 @@ import {
     useQuery,
     useQueryClient
 } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { deleteEvent, getAllEvents } from "@/services/event";
 // import { toast } from "sonner";
 import { IEvent } from "@/types/event";
@@ -27,13 +25,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useState } from "react";
 import { Link } from "react-router";
 import { toast } from "sonner";
-
+import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 export default function SchedulePage() {
     const queryClient = useQueryClient();
-    const user = useSelector((state: RootState) => state.auth.user);
+    const { user, accessToken } = useAuthStore();
     const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
     const IsSU = user?.role === "SU";
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
     const [openList, setOpenList] = useState(false)
     const [dataOpen, setDataOpen] = useState<IEvent>({
         id: "",
@@ -91,11 +89,7 @@ export default function SchedulePage() {
 
     if (isFetching) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold">Loading...</h1>
-                </div>
-            </div>
+            <LoadingSolder />
         )
     }
 

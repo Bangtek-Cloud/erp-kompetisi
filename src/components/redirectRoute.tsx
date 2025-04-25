@@ -1,10 +1,9 @@
-import { RootState } from "@/store";
-import { useSelector } from "react-redux";
+import useAuthStore from "@/store/feature/authStand";
 import { Navigate, Outlet } from "react-router";
 
 
 const RedirectRoute = () => {
-  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const {accessToken} = useAuthStore()
 
   if (accessToken) {
     return <Navigate to="/apps" replace />;

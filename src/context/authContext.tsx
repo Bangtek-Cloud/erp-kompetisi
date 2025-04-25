@@ -1,28 +1,54 @@
-import { refreshToken } from "@/services/auth";
-import { RootState } from "@/store";
-import { loginSuccess, logout } from "@/store/feature/authSlice";
-import { createContext, ReactNode } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { fetchUser, loginUser } from "@/services/auth";
+import useAuthStore from "@/store/feature/authStand";
+import { IUser } from "@/types/user";
+import { createContext, ReactNode, useState } from "react";
+import { toast } from "sonner";
 
 interface AuthContextType {
-  refresh: () => Promise<void>;
+  accessToken: string | null;
+  refreshToken: string | null;
+  user: IUser | null;
+  signIn: (email: string, password: string) => Promise<boolean>;
+  getUser: () => Promise<void>;
+
+  loadingUser: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const dispatch = useDispatch();
-  const refreshTokenState = useSelector((state: RootState) => state.auth.refreshToken);
+  const { zusLoginSuccess, accessToken, refreshToken, zusSetUser, user } = useAuthStore();
 
-  const refresh = async () => {
-    if (!refreshTokenState) return;
-    try {
-      const data = await refreshToken(refreshTokenState);
-      dispatch(loginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken }));
-    } catch {
-      dispatch(logout());
+  const [loadingUser, setLoadingUser] = useState(true);
+
+  const signIn = async (email: string, password: string) => {
+    const data = await loginUser(email, password)
+    if (data.error) {
+      toast.error(data.error)
+      return false
     }
-  };
+    else {
+      zusLoginSuccess({ accessToken: data.accessToken, refreshToken: data.refreshToken });
+      return true
+    }
+  }
 
-  return <AuthContext.Provider value={{ refresh }}>{children}</AuthContext.Provider>;
+  const getUser = async () => {
+    if (!accessToken) return;
+    const data = await fetchUser(accessToken)
+
+    if (data.error) {
+      toast.error(data)
+    }
+    else {
+      zusSetUser(data)
+      setLoadingUser(false)
+    }
+  }
+
+  return (
+    <AuthContext.Provider value={{ signIn, getUser, accessToken, refreshToken, user, loadingUser }}>
+      {children}
+    </AuthContext.Provider>
+  )
 };

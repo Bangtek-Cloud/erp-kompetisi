@@ -1,9 +1,7 @@
 import { rupiahFormat } from "@/lib/utils";
 import { deleteContestant, getTournamentByIdAndUsingUser } from "@/services/tournament";
-import { RootState } from "@/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import {
@@ -18,7 +16,8 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-
+import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 interface iP {
     key: number;
     optionPrice: string;
@@ -27,8 +26,7 @@ interface iP {
 export default function ConfirmTournament() {
     const { tournamentId } = useParams();
     const queryClient = useQueryClient();
-    const user = useSelector((state: RootState) => state.auth.user);
-    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+    const { user, accessToken } = useAuthStore();
     const [tournament, setTournament] = useState<any>({
         loading: true,
         data: null
@@ -85,9 +83,7 @@ export default function ConfirmTournament() {
 
     if (tournament.loading && !tournament.data) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="loader"></div>
-            </div>
+            <LoadingSolder />
         );
     }
 

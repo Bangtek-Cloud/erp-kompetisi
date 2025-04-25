@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
-export const HeroSection = () => {
+export const HeroSection = ({ content }: { content: any }) => {
+    const textContent = content.find((c: any) => c.type === 'text')?.value;
+    const imageContent = content.find((c: any) => c.type === 'image')?.image;
     return (
         <section className="container mx-auto w-full">
             <div className="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto pt-8">
@@ -11,12 +13,8 @@ export const HeroSection = () => {
 
                     <div className="max-w-screen-md mx-auto text-center text-2xl mt-10 font-bold">
                  
-                        Selamat Datang di Bangtek Jago Repair Championship Regional Surabaya!
-                    </div>
-
-                    <p className="max-w-screen-sm mx-auto text-xl text-muted-foreground">
-                        {`Bersiaplah untuk menunjukkan keahlian terbaik Anda dalam kompetisi bergengsi bagi para teknisi di wilayah Surabaya dan Jawa Timur. Bangtek Jago Repair Championship adalah platform yang tepat untuk menguji kemampuan, berbagi pengetahuan, dan membangun jaringan dengan para profesional lainnya.`}
-                    </p>
+                        {textContent}
+                    </div>  
 
                     <div className="space-y-4 md:space-y-0 md:space-x-4">
                         <Link to={'/apps'}>
@@ -35,8 +33,7 @@ export const HeroSection = () => {
                         width={1200}
                         height={1200}
                         className="w-full md:w-[960px] mx-auto rounded-lg relative rouded-lg leading-none flex items-center border border-t-2 border-secondary  border-t-primary/30"
-                        src={"/event.jpeg"
-                        }
+                        src={imageContent}
                         alt="dashboard"
                     />
 

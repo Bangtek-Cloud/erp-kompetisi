@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { createTournament, getTournamentById, updateTournament } from "@/services/tournament";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
@@ -17,6 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getAllEvents } from "@/services/event";
 import { IEvent } from "@/types/event";
+import useAuthStore from "@/store/feature/authStand";
+import LoadingSolder from "@/components/loading-solder";
 
 interface TournamentFormProps {
     actionType: "create" | "update";
@@ -24,7 +24,7 @@ interface TournamentFormProps {
 
 export default function TournamentUpdatePage({ actionType }: TournamentFormProps) {
     const { tournamentId } = useParams<{ tournamentId?: string }>();
-    const { accessToken } = useSelector((state: RootState) => state.auth);
+    const { accessToken } = useAuthStore();
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
@@ -157,9 +157,7 @@ export default function TournamentUpdatePage({ actionType }: TournamentFormProps
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen">
-                <p className="text-lg">Loading...</p>
-            </div>
+            <LoadingSolder />
         );
     }
 
