@@ -57,16 +57,22 @@ export function DataTable<TData, TValue>({
           placeholder="Filter Nama"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+        table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <Input
-          placeholder="Filter email"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+          placeholder="Filter Email"
+          value={
+        (table.getColumn("email")?.getFilterValue() as string) ??
+        (table.getColumn("mail")?.getFilterValue() as string) ??
+        ""
           }
+          onChange={(event) => {
+        const value = event.target.value
+        table.getColumn("email")?.setFilterValue(value)
+        table.getColumn("mail")?.setFilterValue(value)
+          }}
           className="max-w-sm"
         />
       </div>

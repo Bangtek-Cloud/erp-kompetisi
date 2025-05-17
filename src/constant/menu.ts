@@ -1,4 +1,4 @@
-import { Calendar, LayoutDashboardIcon, LayoutPanelLeft, LayoutPanelTop, Trophy, UserCog } from "lucide-react";
+import { Banknote, Calendar, Landmark, LayoutDashboardIcon, LayoutPanelLeft, LayoutPanelTop, Trophy, UserCog, UserRoundXIcon } from "lucide-react";
 
 export const menuAllUser = [
   {
@@ -18,6 +18,25 @@ export const menuAllUser = [
   },
 ]
 
+export const FinanceMenu = [
+  {
+    title: "Finance",
+    url: "/apps/finance",
+    icon: Landmark,
+  },
+  {
+    title: "Asset",
+    url: "/apps/finance/transaction",
+    icon: LayoutPanelTop,
+  },
+  {
+    title: "Donor",
+    url: "/apps/finance/donor",
+    icon: Banknote,
+  },
+  
+]
+
 export const menuManagement = [
   {
     title: "Website Route",
@@ -33,5 +52,10 @@ export const menuManagement = [
     title: "User",
     url: "/apps/management/user",
     icon: UserCog
+  },
+  {
+    title: "Session",
+    url: "/apps/management/session",
+    icon: UserRoundXIcon
   }
 ]

@@ -19,7 +19,7 @@ import { toast } from "sonner"
 import LoadingSolder from "@/components/loading-solder"
 
 export default function UserlistManagement() {
-    const {user, accessToken} = useAuthStore()
+    const { user, accessToken } = useAuthStore()
     const qc = useQueryClient()
     const { data } = useUserStore()
     const navigate = useNavigate()
@@ -57,35 +57,35 @@ export default function UserlistManagement() {
         {
             accessorKey: 'id',
             header: 'Action',
-            cell: ({row}) => {
-                return(
+            cell: ({ row }) => {
+                return (
                     <div className="flex gap-2">
-                        
-                        {row.original.role === 'USER' ? <Button size={'sm'} variant={'outline'} onClick={()=> navigate('/apps/management/user/' + row.original.id)}><PencilRuler /></Button> : null}
-{user?.role === 'SU' && row.original.role  !== 'SU' ? <Button size={'sm'} variant={'outline'} onClick={()=> updateRoles({id: row.original.id, role: row.original.role})}>{row.original.role} to {row.original.role === 'ADMIN' ? 'USER' : 'ADMIN' }</Button> : null}
+
+                        {row.original.role === 'USER' ? <Button size={'sm'} variant={'outline'} onClick={() => navigate('/apps/management/user/' + row.original.id)}><PencilRuler /></Button> : null}
+                        {user?.role === 'SU' && row.original.role !== 'SU' ? <Button size={'sm'} variant={'outline'} onClick={() => updateRoles({ id: row.original.id, role: row.original.role })}>{row.original.role} to {row.original.role === 'ADMIN' ? 'USER' : 'ADMIN'}</Button> : null}
                     </div>
                 )
             }
         }
     ]
 
-    const {mutate: updateRoles, isPending} = useMutation({
+    const { mutate: updateRoles, isPending } = useMutation({
         mutationFn: async (data: any) => {
             const kirim = {
                 userId: data.id,
                 role: data.role === 'ADMIN' ? 'USER' : 'ADMIN'
             }
             const response = await changeRoleUser(kirim, accessToken || "")
-            if(response.success){
+            if (response.success) {
                 toast.success(response.message)
-                qc.invalidateQueries({queryKey: ['user-management']})
+                qc.invalidateQueries({ queryKey: ['user-management'] })
             } else {
                 toast.error(response.error)
             }
         }
     })
 
-    if(isPending){
+    if (isPending) {
         return <LoadingSolder />
     }
 

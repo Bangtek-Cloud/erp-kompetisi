@@ -35,6 +35,7 @@ import WebsiteRouteIndex from "@/screen/dashboard/management/webRouter";
 import UpdateOrCreateWebsiteRoute from "@/screen/dashboard/management/webRouter/updateOrCreate";
 import Userlist from "@/screen/dashboard/management/user";
 import AccountSettingById from "@/screen/dashboard/management/user/updateUser";
+import UserSessionlist from "@/screen/dashboard/management/session";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -91,6 +92,8 @@ export default function AppRouter() {
 
                                 <Route path="user" element={<Userlist />} />
                                 <Route path="user/:userId" element={<AccountSettingById />} />
+
+                                <Route path="session" element={<UserSessionlist />} />
                             </Route>
                         )}
 
