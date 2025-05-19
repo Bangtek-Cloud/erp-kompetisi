@@ -13,7 +13,7 @@ import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
 import { Link } from "react-router"
 import { IUser } from "@/types/user"
-import { menuAllUser, menuManagement } from "@/constant/menu"
+import { FinanceMenu, menuAllUser, menuManagement } from "@/constant/menu"
 import useAuthStore from "@/store/feature/authStand";
 
 interface sidebarProps {
@@ -45,8 +45,8 @@ export function AppSidebar(props: sidebarProps) {
       </SidebarHeader>
       <SidebarContent className="bg-background">
         <NavMain items={menuAllUser} />
-        {/* <NavNormal nameMenu="Finance" items={data.finance} />
-        <NavNormal nameMenu="Management" items={data.management} />
+         <NavNormal nameMenu="Finance" items={FinanceMenu} />
+        {/*<NavNormal nameMenu="Management" items={data.management} />
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
         {isAdmin && (
            <NavNormal nameMenu="Management" items={menuManagement} />

@@ -106,7 +106,11 @@ export default function TournamentList({
         Hadiah
     </Button>
     {
-        (tournament.maxParticipants ?? 0) !== 0 && countVerified >= (tournament.maxParticipants ?? 0) ? (
+        tournament.status === "COMPLETED" ? (
+            <Button size="sm" disabled>
+                Selesai
+            </Button>
+        ) : (tournament.maxParticipants ?? 0) !== 0 && countVerified >= (tournament.maxParticipants ?? 0) ? (
             <Button size="sm" disabled>
                 Penuh
             </Button>

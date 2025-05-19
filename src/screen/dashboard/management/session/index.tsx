@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import UserlistManagement from "./list";
 import useAuthStore from "@/store/feature/authStand";
-import useUserStore from "@/store/feature/userStand";
 import LoadingSolder from "@/components/loading-solder";
-import { getAllUser } from "@/services/auth";
+import { getAllUserSession } from "@/services/session";
+import useSessionStore from "@/store/feature/sessionStand";
 
-export default function Userlist() {
+export default function UserSessionlist() {
     const { accessToken } = useAuthStore()
-    const { loading, setData, setLoading, setError } = useUserStore()
+    const { loading, setData, setLoading, setError } = useSessionStore()
 
     const { error } = useQuery({
-        queryKey: ['user-management'],
+        queryKey: ['session'],
         queryFn: async () => {
-            const response = await getAllUser(accessToken || "")
+            const response = await getAllUserSession(accessToken || "")
             if (response.success) {
                 setData(response.data)
                 setLoading(false)
