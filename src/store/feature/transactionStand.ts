@@ -1,19 +1,28 @@
+import { IResAccount } from "@/types/account";
 import { create } from "zustand";
 
 interface ITrx {
-    data: any[];
+    data: IResAccount
     loading: boolean;
     error: string | null;
-    setData: (data: any[]) => void;
+   setData: (data: IResAccount) => void;
     setError: (error: string) => void;
     setLoading: (status: boolean) => void;
 }
 
 const useTransactionStore = create<ITrx>((set) => ({
-    data: [],
+    data: {
+        accounts: [],
+        total: 0,
+        totalPage: 0,
+        totalCredit: 0,
+        totalDebit: 0,
+        balance: 0,
+        totalPerPage: 0
+    },
     loading: true,
     error: null,
-    setData: (data) => set({ data }),
+    setData: (data: IResAccount) => set({ data }),
     setError: (error) => set({ error }),
     setLoading: (loading) => set({ loading })
 }));

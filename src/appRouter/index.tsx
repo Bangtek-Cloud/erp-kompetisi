@@ -5,7 +5,6 @@ import FinancePage from "@/screen/dashboard/finance";
 import DonorsPage from "@/screen/dashboard/finance/donors";
 import PublicFinancePage from "@/screen/dashboard/finance/public";
 import FinancialReportsPage from "@/screen/dashboard/finance/report";
-import TransactionsPage from "@/screen/dashboard/finance/transactions";
 import MatchesPage from "@/screen/dashboard/main/match";
 import SchedulePage from "@/screen/dashboard/main/schedule";
 import TechniciansPage from "@/screen/dashboard/main/technicians";
@@ -36,6 +35,7 @@ import UpdateOrCreateWebsiteRoute from "@/screen/dashboard/management/webRouter/
 import Userlist from "@/screen/dashboard/management/user";
 import AccountSettingById from "@/screen/dashboard/management/user/updateUser";
 import UserSessionlist from "@/screen/dashboard/management/session";
+import AssetsManagement from "@/screen/dashboard/finance/assets";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -100,7 +100,7 @@ export default function AppRouter() {
                         <Route path="finance">
                             <Route index element={<Navigate to="/apps/finance/home" />} />
                             <Route path="home" element={<FinancePage />} />
-                            <Route path="transactions" element={<TransactionsPage />} />
+                            <Route path="assets" element={<AssetsManagement />} />
                             <Route path="reports" element={<FinancialReportsPage />} />
                             <Route path="public" element={<PublicFinancePage />} />
                             <Route path="donors" element={<DonorsPage />} />
