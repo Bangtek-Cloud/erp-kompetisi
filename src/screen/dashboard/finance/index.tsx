@@ -127,7 +127,7 @@ export default function FinancePage() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Transaction</h1>
           {
-            isAdmin ?? (
+            isAdmin && (
               <div className="flex gap-2">
                 <Button onClick={() => {
                   setNewBlock(true)
@@ -204,7 +204,7 @@ export default function FinancePage() {
                   <TableHead>Note</TableHead>
                   <TableHead>Status</TableHead>
                   {
-                    isAdmin ?? (
+                    isAdmin && (
                       <TableHead className="text-right">Actions</TableHead>
                     )
                   }
@@ -219,29 +219,29 @@ export default function FinancePage() {
                     <TableCell>{ix.note}</TableCell>
                     <TableCell><Badge variant={ix.status === "DEBIT" ? "destructive" : "secondary"}>{ix.status}</Badge></TableCell>
                     {
-                      isAdmin ?? (
+                      isAdmin && (
 
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => {
-                        setNewBlock(false)
-                        setUpdate({
-                          ...ix,
-                          date: DateTime.fromISO(ix.date).toJSDate()
-                        })
-                        setAddNewTransaction(true)
-                      }}>
-                        Edit
-                      </Button>
-                      <Button variant="destructive" size="sm" onClick={() => toast('Are you sure?', {
-                        description: 'This action cannot be undone.',
-                        action: {
-                          label: 'Delete',
-                          onClick: () => deleteTransaction(ix.id)
-                        }
-                      })}>
-                        Delete
-                      </Button>
-                    </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="sm" onClick={() => {
+                            setNewBlock(false)
+                            setUpdate({
+                              ...ix,
+                              date: DateTime.fromISO(ix.date).toJSDate()
+                            })
+                            setAddNewTransaction(true)
+                          }}>
+                            Edit
+                          </Button>
+                          <Button variant="destructive" size="sm" onClick={() => toast('Are you sure?', {
+                            description: 'This action cannot be undone.',
+                            action: {
+                              label: 'Delete',
+                              onClick: () => deleteTransaction(ix.id)
+                            }
+                          })}>
+                            Delete
+                          </Button>
+                        </TableCell>
                       )
                     }
                   </TableRow>
