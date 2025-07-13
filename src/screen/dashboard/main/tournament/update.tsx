@@ -39,7 +39,7 @@ export default function TournamentUpdatePage({ actionType }: TournamentFormProps
     const [prizes, setPrizes] = useState<{ title: string; value: string }[]>([{ title: "", value: "" }]);
     const [prices, setPrices] = useState<{ key: number; description: string; value: string; amount: number }[]>([{ key: 1, value: "", amount: 0, description: "" }]);
     const [usingLogoPrice, setUsingLogoPrice] = useState(0);
-    const [status, setStatus] = useState<"UPCOMING" | "ONGOING" | "COMPLETE">("UPCOMING");
+    const [status, setStatus] = useState<"UPCOMING" | "ONGOING" | "COMPLETED">("UPCOMING");
     const [loading, setLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [eventId, setEventId] = useState("");
@@ -392,12 +392,12 @@ export default function TournamentUpdatePage({ actionType }: TournamentFormProps
                                 <label>Status</label>
                                 <select
                                     value={status}
-                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value as "UPCOMING" | "ONGOING" | "COMPLETE")}
+                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value as "UPCOMING" | "ONGOING" | "COMPLETED")}
                                     className="w-full p-2 border rounded-md"
                                 >
                                     <option value="UPCOMING">Akan Datang</option>
                                     <option value="ONGOING">Sedang Berjalan</option>
-                                    <option value="COMPLETE">Selesai</option>
+                                    <option value="COMPLETED">Selesai</option>
                                 </select>
                             </div>
                         </div>
