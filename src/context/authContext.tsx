@@ -17,7 +17,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { zusLoginSuccess, accessToken, refreshToken, zusSetUser, user } = useAuthStore();
+  const { zusLoginSuccess, accessToken, refreshToken, zusSetUser, user, zusLogout } = useAuthStore();
 
   const [loadingUser, setLoadingUser] = useState(true);
 
@@ -35,14 +35,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const getUser = async () => {
     if (!accessToken) return;
-    const data = await fetchUser(accessToken)
-
-    if (data.error) {
-      toast.error(data)
-    }
-    else {
-      zusSetUser(data)
-      setLoadingUser(false)
+    try {
+      const data = await fetchUser(accessToken);
+      if(data.error){
+        toast.error(data.error);
+        zusLogout()
+      }
+      zusSetUser(data);
+      setLoadingUser(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "An error occurred");
+      zusLogout()
     }
   }
 

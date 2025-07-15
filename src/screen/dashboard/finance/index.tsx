@@ -215,7 +215,13 @@ export default function FinancePage() {
                   <TableRow key={index}>
                     <TableCell className="font-medium">{DateTime.fromISO(ix.date).toFormat('dd LLL yyyy')}</TableCell>
                     <TableCell className="font-medium">{ix.detail}</TableCell>
-                    <TableCell>{ix.amount}</TableCell>
+                    <TableCell>
+                      {ix.amount.toLocaleString('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                        minimumFractionDigits: 0,
+                      })}
+                    </TableCell>
                     <TableCell>{ix.note}</TableCell>
                     <TableCell><Badge variant={ix.status === "DEBIT" ? "destructive" : "secondary"}>{ix.status}</Badge></TableCell>
                     {
