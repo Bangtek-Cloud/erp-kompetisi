@@ -80,6 +80,25 @@ export default function ConfirmTournament() {
         fetchTournament();
     }, [user, accessToken]);
 
+    const formatPhoneNumber = (phoneNumber: string | null | undefined): string | null => {
+        if (!phoneNumber) {
+            return null;
+        }
+
+        // Hapus spasi atau karakter non-digit yang mungkin ada
+        let cleanedNumber = phoneNumber.replace(/\D/g, '');
+
+        // Cek jika dimulai dengan "08" atau "0"
+        if (cleanedNumber.startsWith('08')) {
+            return '62' + cleanedNumber.substring(1); // Ubah "08" menjadi "628"
+        } else if (cleanedNumber.startsWith('0')) {
+            return '62' + cleanedNumber.substring(1); // Ubah "0" menjadi "62"
+        }
+
+        // Jika tidak dimulai dengan "0" atau "08", kembalikan apa adanya (misal sudah 62)
+        return cleanedNumber;
+    };
+
 
     if (tournament.loading && !tournament.data) {
         return (
@@ -118,10 +137,18 @@ export default function ConfirmTournament() {
                             <>
                                 <h2 className="text-xl font-semibold mb-4">Cara Pembayaran</h2>
                                 <ol className="list-decimal list-inside space-y-2">
-                                    <li>Transfer ke rekening BRI: 0878 0100 5002 505 a.n. Norman Chandra</li>
+                                    <li>Transfer ke rekening {tournament.data?.tournament?.event?.bank?.BankType ?? ""}: {tournament.data?.tournament?.event?.bank?.BankNo ?? ""} a.n. {tournament.data?.tournament?.event?.bank?.BankName ?? ""}</li>
                                     <li>
-                                        Upload bukti pembayaran ke nomor WA <Link target="_blank" className="bg-muted p-2" to={'https://wa.me/628998087576'}>{'+62 899-8087-576'} 🔗</Link>
-                                    </li>
+                                        Upload bukti pembayaran ke nomor Whatsapp {" "}
+                                        {tournament.data?.tournament?.event?.bank?.noHp &&
+                                            <Link
+                                                target="_blank"
+                                                className="bg-muted p-2"
+                                                to={'https://wa.me/' + formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp)}
+                                            >
+                                                +{formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp) ?? ""} 🔗
+                                            </Link>
+                                        }                                    </li>
                                     <li>Tunggu verifikasi dari panitia</li>
                                 </ol>
                             </>

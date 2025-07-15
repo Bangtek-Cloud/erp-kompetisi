@@ -36,6 +36,9 @@ import Userlist from "@/screen/dashboard/management/user";
 import AccountSettingById from "@/screen/dashboard/management/user/updateUser";
 import UserSessionlist from "@/screen/dashboard/management/session";
 import AssetsManagement from "@/screen/dashboard/finance/assets";
+import BankManagement from "@/screen/dashboard/management/bank";
+import NewBankAccount from "@/screen/dashboard/management/bank/new";
+import UpdateBankAccount from "@/screen/dashboard/management/bank/update";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -94,6 +97,10 @@ export default function AppRouter() {
                                 <Route path="user/:userId" element={<AccountSettingById />} />
 
                                 <Route path="session" element={<UserSessionlist />} />
+
+                                <Route path="bank" element={<BankManagement />} />
+                                <Route path="bank/new" element={<NewBankAccount />} />
+                                <Route path="bank/update/:id" element={<UpdateBankAccount />} />
                             </Route>
                         )}
 
