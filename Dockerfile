@@ -1,26 +1,20 @@
-# Gunakan image resmi Bun
-FROM oven/bun:latest
+FROM node:20-alpine
 
-# Set working directory
 WORKDIR /app
 
 ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+ENV NODE_ENV=$NODE_ENV
 
-# Copy file package.json dan bun.lockb untuk menginstal dependensi
-COPY package.json bun.lockb ./
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install Bun dependencies dan TypeScript secara global
-RUN bun install && bun add typescript --global
+COPY package.json pnpm-lock.yaml ./
 
-# Copy seluruh aplikasi ke dalam container
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 
-# Build aplikasi TypeScript terlebih dahulu, kemudian Vite
-RUN bun run build --mode $NODE_ENV
+RUN pnpm run build --mode $NODE_ENV
 
-# Expose port untuk aplikasi, biasanya Vite di port 3000, sesuaikan jika berbeda
 EXPOSE 8080
 
-# Start aplikasi menggunakan preview (jika mode produksi)
-CMD ["bun", "run", "preview"]
+CMD ["pnpm", "run", "preview"]

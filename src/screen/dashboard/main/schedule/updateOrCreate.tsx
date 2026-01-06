@@ -337,7 +337,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                         </FormItem>
                                     )}
                                 />
-                                
+
                                 <FormField
                                     control={form.control}
                                     name="bankId"
@@ -360,9 +360,17 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                                             </Select>
                                             <FormMessage />
                                             <FormDescription>Saat ini :
-                                                {banks?.find((b: IBankTable) => b.id === event.bankId)
-                                                    ? `${banks.find((b: IBankTable) => b.id === event.bankId)?.BankType} - ${banks.find((b: IBankTable) => b.id === event.bankId)?.BankName}`
-                                                    : "Tidak ada bank terpilih"}
+                                                {(() => {
+                                                    const bank = banks?.find((b: IBankTable | undefined) =>
+                                                        !!b && b.id === event?.bankId
+                                                    );
+
+                                                    return bank
+                                                        ? `${bank.BankType} - ${bank.BankName}`
+                                                        : "Tidak ada bank terpilih";
+                                                })()}
+
+
                                             </FormDescription>
                                         </FormItem>
                                     )}
