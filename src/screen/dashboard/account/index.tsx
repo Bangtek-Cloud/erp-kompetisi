@@ -230,7 +230,7 @@ export default function AccountSettings() {
                           className="mt-2 block w-full border border-gray-300 rounded p-2"
                           id="logo"
                           type="file"
-                          accept="image/*"
+                          accept="image/png, image/jpg, image/jpeg"
                           onChange={handleFileChange}
                         />
                         <span className="text-xs">Ukuran file maksimal 10Mb</span>

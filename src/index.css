@@ -13,7 +13,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.2 0.03 90);
 
-  --primary: oklch(0.7 0.22 50);
+  --primary: #3b82f6;
   --primary-foreground: oklch(0.98 0.01 100);
 
   --secondary: oklch(0.96 0.01 120);
@@ -32,7 +32,16 @@
   --input: oklch(0.9 0.01 90);
   --ring: oklch(0.7 0.22 50);
   --radius: 0.5rem;
+
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  
+  --danger: #ef4444;
 }
+
 
 .dark {
   --background: oklch(0.2 0.03 90);
@@ -44,7 +53,7 @@
   --popover: oklch(0.2 0.03 90);
   --popover-foreground: oklch(0.98 0.01 100);
 
-  --primary: oklch(0.58 0.2 40);
+  --primary: #3b82f6;
   --primary-foreground: oklch(0.98 0.01 100);
 
   --secondary: oklch(0.2 0.02 30);
@@ -114,7 +123,65 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+} */
+
+.glass-sidebar {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+}
+
+.event-card {
+  /* background: var(--bg-card); */
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.disabled-event {
+  filter: grayscale(0.8) contrast(0.8);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.disabled-event .actions-overlay {
+  pointer-events: auto;
+  /* Allow re-enabling */
+}
+
+/* Standardize layout to allow scroll */
+#root {
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+} */
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #334155;
 }
