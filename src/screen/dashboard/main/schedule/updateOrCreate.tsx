@@ -147,15 +147,27 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
 
             const img = new Image();
             img.src = URL.createObjectURL(file);
-            img.onloadedmetadata = () => {
+            img.onload = () => {
                 const canvas = document.createElement("canvas");
                 const ctx = canvas.getContext("2d");
                 const size = Math.min(img.width, img.height);
+
                 canvas.width = 200;
                 canvas.height = 200;
 
                 if (ctx) {
-                    ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, 200, 200);
+                    ctx.drawImage(
+                        img,
+                        (img.width - size) / 2,
+                        (img.height - size) / 2,
+                        size,
+                        size,
+                        0,
+                        0,
+                        200,
+                        200
+                    );
+
                     canvas.toBlob((blob) => {
                         if (blob) {
                             const newFile = new File([blob], file.name, { type: "image/png" });
@@ -165,6 +177,7 @@ export default function EventUpdateOrCreate({ actionType }: EventUpdateOrCreateP
                     }, "image/png");
                 }
             };
+
         } else {
             form.setValue("logo", null);
             setPreview(null);
