@@ -3,7 +3,7 @@ name: Deploy Web to Production
 on:
   push:
     branches:
-      - 'release/**'
+      - 'main'
 
 jobs:
   deploy:
