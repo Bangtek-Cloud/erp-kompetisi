@@ -32,7 +32,7 @@ export function NavMain({
                     <SidebarMenuItem className="flex items-center gap-2">
                         <SidebarMenuButton onClick={() => navigate("/apps/notification")}
                             tooltip="Quick Create"
-                            className="min-w-8 bg-secondary text-secondary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+                            className="min-w-8 duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
                         >
                             <Bell />
                             <span>Notification</span>
@@ -50,12 +50,12 @@ export function NavMain({
                 <SidebarMenu>
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild isActive={!pathname.startsWith(item.url)} className={"bg-primary/80 text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"}>
-                        <Link to={item.url}>
+                            <Link to={item.url} className="flex items-center gap-2">
+                                <SidebarMenuButton tooltip={item.title} isActive={pathname.startsWith(item.url)} >
                                     {item.icon && <item.icon />}
                                     <span>{item.title}</span>
-                                </Link>
-                            </SidebarMenuButton>
+                                </SidebarMenuButton>
+                            </Link>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>

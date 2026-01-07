@@ -27,19 +27,19 @@ export function NavNormal({
     const location = useLocation()
     const pathname = location.pathname
 
-    
+
     return (
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>{nameMenu}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild isActive={!pathname.startsWith(item.url)} className={"bg-primary/80 text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"}>
-                            <Link to={item.url}>
-                                <item.icon />
+                        <Link to={item.url} className="flex items-center gap-2">
+                            <SidebarMenuButton tooltip={item.title} isActive={pathname.startsWith(item.url)} >
+                                {item.icon && <item.icon />}
                                 <span>{item.title}</span>
-                            </Link>
-                        </SidebarMenuButton>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarMenuItem>
                 ))}
             </SidebarMenu>
