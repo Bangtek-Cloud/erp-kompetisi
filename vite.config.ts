@@ -19,7 +19,7 @@ export default defineConfig({
    server: {
     proxy: {
       "/api": {
-        target: "https://api.bangtek.org/",
+        target: "http://localhost:3000/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/ep/, ''),
       }
