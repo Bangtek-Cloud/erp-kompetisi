@@ -18,10 +18,10 @@ export default defineConfig({
   },
    server: {
     proxy: {
-      "/api": {
+      "/ep": {
         target: "http://localhost:3000/api/v1",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/ep/, ''),
       }
     },
   },
