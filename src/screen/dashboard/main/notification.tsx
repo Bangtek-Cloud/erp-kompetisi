@@ -6,7 +6,6 @@ import useAuthStore from "@/store/feature/authStand";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import { 
-    Clock, 
     CheckCircle2, 
     AlertCircle, 
     CalendarX, 
@@ -115,7 +114,7 @@ function NotificationPage() {
                                                     <CalendarX className="w-3.5 h-3.5 mr-1" /> Expired
                                                 </Button>
                                             ) : (
-                                                <Link to={`/apps/tournament/confirm/${item.id}`}>
+                                                <Link to={`/apps/tournament/confirm/${item.tournament.id}`}>
                                                     <Button 
                                                         size="sm" 
                                                         variant={isVerified ? "outline" : "default"}
