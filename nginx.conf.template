@@ -1,0 +1,44 @@
+server {
+    listen 80;
+    server_name localhost;
+    
+    resolver 1.1.1.1 8.8.8.8 ipv6=off valid=30s;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(png|jpe?g|gif|webp|svg|ico)$ {
+        root /usr/share/nginx/html;
+
+        # Cache di browser selama 30 hari
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000, immutable";
+
+        # Tetap fallback ke index.html kalau pakai SPA dan file tidak ada
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        set $target_url ${BACKEND_URL};
+        
+        rewrite ^/api/(.*) /api/$1 break;
+        
+        proxy_pass $target_url;
+
+        proxy_ssl_server_name on;
+        proxy_ssl_name ${ORIGIN_URL};
+        proxy_set_header Host ${ORIGIN_URL};
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        
+        proxy_cache_bypass $http_upgrade;
+        
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}

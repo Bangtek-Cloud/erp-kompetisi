@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import genericsInstance from "./generics-client";
 import { ErrorType } from "@/types/errorType";
 
@@ -30,6 +30,7 @@ export const fetchUser = async (accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
     return response.data;
 

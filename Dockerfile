@@ -1,20 +1,13 @@
-FROM node:20-alpine
+FROM nginx:stable-alpine
 
-WORKDIR /app
+COPY dist /usr/share/nginx/html
 
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-RUN corepack enable && corepack prepare pnpm@latest --activate
+COPY scripts/sc.sh /scripts/sc.sh
 
-COPY package.json pnpm-lock.yaml ./
+RUN chmod +x /scripts/sc.sh
 
-RUN pnpm install --frozen-lockfile
+EXPOSE 80
 
-COPY . .
-
-RUN pnpm run build --mode $NODE_ENV
-
-EXPOSE 8080
-
-CMD ["pnpm", "run", "preview"]
+CMD ["/scripts/sc.sh"]
