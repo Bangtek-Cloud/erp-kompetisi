@@ -63,6 +63,9 @@ export default function TournamentList({
                 <p className="text-[10px] text-slate-600 dark:text-slate-400 font-lat2 mb-6">
                     Event : {tournament.eventName}
                 </p>
+                 <p className="text-[10px] text-slate-600 dark:text-slate-400 font-lat2 mb-6">
+                    Location : {tournament.location}
+                </p>
 
                 <div className="space-y-4 mb-8">
                     <div className="flex justify-between items-center text-xs">
