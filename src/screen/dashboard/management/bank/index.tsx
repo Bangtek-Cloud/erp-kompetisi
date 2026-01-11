@@ -13,14 +13,14 @@ import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Userlist() {
-    const { accessToken, user } = useAuthStore();
+    const { user } = useAuthStore();
     const { loading, setData, setLoading, setError, data } = useBankStore();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     const { mutate: mutateDelete, isPending: isDeleting } = useMutation({
         mutationFn: async (id: string) => {
-            const response = await deleteBankAccount(accessToken || '', id);
+            const response = await deleteBankAccount(id);
             if (response.success) {
                 toast.success("Bank Account deleted successfully");
                 queryClient.invalidateQueries({ queryKey: ["bank-management"] });
@@ -90,7 +90,7 @@ export default function Userlist() {
     const { error } = useQuery({
         queryKey: ['bank-management'],
         queryFn: async () => {
-            const response = await getAllBank(accessToken || "");
+            const response = await getAllBank();
             if (response.success) {
                 setData(response.data);
                 setLoading(false);

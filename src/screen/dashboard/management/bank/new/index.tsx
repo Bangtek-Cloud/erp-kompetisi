@@ -14,13 +14,11 @@ import {
 } from "@/components/ui/form"; // Asumsi Anda menggunakan Shadcn UI Form
 import { toast } from "sonner";
 import { createBankAccount } from "@/services/bank";
-import useAuthStore from "@/store/feature/authStand";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import LoadingSolder from "@/components/loading-solder";
 
 export default function NewBankAccount() {
-    const { accessToken } = useAuthStore()
     const queryClient = useQueryClient();
     const navigate = useNavigate()
 
@@ -36,7 +34,7 @@ export default function NewBankAccount() {
 
     const { mutate: mutateCreate, isPending: isCreating } = useMutation({
         mutationFn: async (data: IBank) => {
-            const response = await createBankAccount(accessToken || '', data);
+            const response = await createBankAccount(data);
             if (response.success) {
                 toast.success("Bank Account created successfully");
                 queryClient.invalidateQueries({ queryKey: ["bank-management"] });

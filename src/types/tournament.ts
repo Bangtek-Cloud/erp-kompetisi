@@ -1,36 +1,35 @@
-import { IEvent } from "./event"
-
 export interface TournamentProps {
-    id: string
-    name: string
-    description: string
+    id: string;
+    name: string;
+    start: string;
+    image: string;
+    rules: string[]
+    maxParticipan: number;
+    status: string;
+    participan: number
+    end: string
+    desciption: string
+    isActive: boolean
     prize: {
-        title: string
+        title: string,
         value: string
     }[]
-    startDate: string
-    endDate: string
-    status: string
-    maxParticipants?: number
-    location?: string
-    rules?: string[]
-    createdAt: string
-    updatedAt: string
-    disabled: boolean
-    eventId: string
-    event?: IEvent
-    contestants?: {
-        storeName?: string
-        id: string
-        name: string
-        email: string
-        isVerified: boolean
-        storeAddress?: string
-        logo?: string | null
-        user: {
-            id: string
-            name: string
-            email: string
-        }
-    }[]
+    eventName: string
+    location: string
+
+    // id: item.id,
+    //     rules: item?.rules,
+    //     participan: item.contestants.length,
+    //     maxParticipan: item.maxParticipants,
+    //     status: item.status,
+    //     start: item.startDate,
+    //     end: item.endDate,
+    //     desciption: item.description,
+    //     isActive: !item.disabled,
+    //     prize: item.prize,
+    //     image: item.event.eventLogoUrl
+    //         ? process.env.S3_URL + item.event.eventLogoUrl
+    //         : null,
+    //     eventName: item?.event?.name,
+    //     location: item?.event?.location
 }
