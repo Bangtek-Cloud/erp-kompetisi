@@ -1,4 +1,5 @@
 import { fetchUser, loginUser } from "@/services/auth";
+import genericsInstance from "@/services/generics-client";
 import useAuthStore from "@/store/feature/authStand";
 import { IUser } from "@/types/user";
 import { createContext, ReactNode, useState } from "react";
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!accessToken) return;
     try {
       const data = await fetchUser(accessToken);
+      genericsInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
       if(data.error){
         toast.error(data.error);
         zusLogout()

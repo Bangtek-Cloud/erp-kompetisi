@@ -16,18 +16,29 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import useAuthStore from "@/store/feature/authStand";
 import LoadingSolder from "@/components/loading-solder";
-interface iP {
-    key: number;
-    optionPrice: string;
-}
+import { 
+    CheckCircle2, 
+    Clock, 
+    CreditCard, 
+    ExternalLink, 
+    Store, 
+    Package, 
+    User, 
+    AlertTriangle,
+    ArrowLeft,
+    Receipt
+} from "lucide-react";
 
 export default function ConfirmTournament() {
     const { tournamentId } = useParams();
     const queryClient = useQueryClient();
     const { user, accessToken } = useAuthStore();
-    const [tournament, setTournament] = useState<any>({
+    const [tournament, setTournament] = useState<{loading: boolean, data: any}>({
         loading: true,
         data: null
     });
@@ -38,242 +49,262 @@ export default function ConfirmTournament() {
             const response = await deleteContestant(id, accessToken as string);
             if (response.success === false) {
                 toast.error(response.error);
-                return;
             } else {
                 toast.success('Pendaftaran berhasil dibatalkan');
                 queryClient.invalidateQueries({ queryKey: ['notificationsTournament'] });
                 queryClient.invalidateQueries({ queryKey: ['pendingTransaction'] });
                 navigate('/apps/tournament');
-                setTournament({
-                    loading: false,
-                    data: null
-                });
-
             }
         },
-    })
+    });
 
     useEffect(() => {
         const fetchTournament = async () => {
             const response = await getTournamentByIdAndUsingUser(tournamentId as string, accessToken || '');
-            if (response.error) {
-                toast.error(response.error);
-                setTournament({
-                    loading: false,
-                    data: null
-                });
+            if (response.error || !response.data) {
+                setTournament({ loading: false, data: null });
                 return;
             }
-            if (!response.data) {
-                toast.error('Data tidak ditemukan');
-                setTournament({
-                    loading: false,
-                    data: null
-                });
-                return;
-            }
-            setTournament({
-                loading: false,
-                data: response.data
-            });
+            setTournament({ loading: false, data: response.data });
         };
         fetchTournament();
-    }, [user, accessToken]);
+    }, [user, accessToken, tournamentId]);
 
     const formatPhoneNumber = (phoneNumber: string | null | undefined): string | null => {
-        if (!phoneNumber) {
-            return null;
-        }
-
-        // Hapus spasi atau karakter non-digit yang mungkin ada
-        let cleanedNumber = phoneNumber.replace(/\D/g, '');
-
-        // Cek jika dimulai dengan "08" atau "0"
-        if (cleanedNumber.startsWith('08')) {
-            return '62' + cleanedNumber.substring(1); // Ubah "08" menjadi "628"
-        } else if (cleanedNumber.startsWith('0')) {
-            return '62' + cleanedNumber.substring(1); // Ubah "0" menjadi "62"
-        }
-
-        // Jika tidak dimulai dengan "0" atau "08", kembalikan apa adanya (misal sudah 62)
-        return cleanedNumber;
+        if (!phoneNumber) return null;
+        const cleaned = phoneNumber.replace(/\D/g, '');
+        if (cleaned.startsWith('08')) return '62' + cleaned.substring(1);
+        if (cleaned.startsWith('0')) return '62' + cleaned.substring(1);
+        return cleaned;
     };
 
+    if (tournament.loading) return <LoadingSolder />;
+    if (!tournament.data) return <div className="h-screen flex flex-col items-center justify-center gap-4 text-center p-4">
+        <h1 className="text-xl font-bold">Data pendaftaran tidak ditemukan</h1>
+        <Button onClick={() => navigate('/apps/tournament')}>Kembali</Button>
+    </div>;
 
-    if (tournament.loading && !tournament.data) {
-        return (
-            <LoadingSolder />
-        );
-    }
+    const selectedPackage = tournament.data.tournament.price.find((p: any) => p.key === tournament?.data?.optionPrice);
+    const isVerified = tournament.data.isVerified;
 
-    if (!tournament.data && !tournament.loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <h1 className="text-2xl font-bold">Data tidak ditemukan</h1>
-            </div>
-        );
-    }
-
-    if (!user || !accessToken) {
-        return;
-    }
-
-    if (user.id !== tournament.data.userId) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <h1 className="text-2xl font-bold">Anda tidak memiliki akses ke halaman ini</h1>
-            </div>
-        );
-    }
-
-    const selectedPackage = tournament.data.tournament.price.find((p: iP) => p.key === tournament?.data?.optionPrice);
     return (
-        <main className="md:min-h-[100vh] container mx-auto p-8">
-            <div className="flex flex-col gap-4">
-                <h1 className="text-2xl font-bold">Detail pendaftaran kontestan</h1>
-                <div className="shadow-md rounded-lg p-6">
-                    {
-                        tournament.data.isVerified === false && (
-                            <>
-                                <h2 className="text-xl font-semibold mb-4">Cara Pembayaran</h2>
-                                <ol className="list-decimal list-inside space-y-2">
-                                    <li>Transfer ke rekening {tournament.data?.tournament?.event?.bank?.BankType ?? ""}: {tournament.data?.tournament?.event?.bank?.BankNo ?? ""} a.n. {tournament.data?.tournament?.event?.bank?.BankName ?? ""}</li>
-                                    <li>
-                                        Upload bukti pembayaran ke nomor Whatsapp {" "}
-                                        {tournament.data?.tournament?.event?.bank?.noHp &&
-                                            <Link
-                                                target="_blank"
-                                                className="bg-muted p-2"
-                                                to={'https://wa.me/' + formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp)}
-                                            >
-                                                +{formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp) ?? ""} 🔗
-                                            </Link>
-                                        }                                    </li>
-                                    <li>Tunggu verifikasi dari panitia</li>
-                                </ol>
-                            </>
-                        )
-                    }
-                    <h2 className="text-xl font-semibold mt-6 mb-4 border-b pb-2">Rincian Pendaftaran</h2>
-                    <div className="p-6 rounded-xl shadow-md border space-y-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h2 className="text-lg font-bold">INVOICE</h2>
-                                <p className="text-sm text-muted-foreground">#{tournament.data.id}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-sm">Tanggal: {new Date(tournament.data.createdAt).toLocaleDateString()}</p>
-                                <p className="text-sm">Status:
-                                    {tournament.data.isVerified ? (
-                                        <span className="text-green-600 font-medium">Terverifikasi</span>
-                                    ) : (
-                                        <span className="text-red-600 font-medium">Belum diverifikasi</span>
-                                    )}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="border-t pt-4 space-y-2">
-                            <div className="flex justify-between">
-                                <span className="font-medium">Nama Kontestan</span>
-                                <span>{user.name}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="font-medium">Jenis Kontestan</span>
-                                <span>{tournament.data.playerType}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="font-medium">Paket</span>
-                                <span>{selectedPackage ? `${selectedPackage.value}` : 'Tidak ditemukan'}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="font-medium">Harga Paket</span>
-                                <span>{selectedPackage ? rupiahFormat(selectedPackage.amount) : '-'}</span>
-                            </div>
-                            {tournament.data.usingLogo && (
-                                <div className="flex justify-between">
-                                    <span className="font-medium">Biaya Logo</span>
-                                    <span>{rupiahFormat(tournament.data.tournament.usingLogoPrice)}</span>
-                                </div>
-                            )}
-                            <div className="flex justify-between border-t pt-2 font-semibold text-lg">
-                                <span>Total Bayar</span>
-                                <span>{rupiahFormat(tournament.data.price)}</span>
-                            </div>
-                        </div>
+        <main className="min-h-screen bg-slate-50/50 pb-20">
+            {/* Header Area */}
+            <div className="bg-white border-b sticky top-0 z-10">
+                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                    <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-2">
+                        <ArrowLeft className="w-4 h-4" /> Kembali
+                    </Button>
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-muted-foreground italic">ID: #{tournament.data.id}</span>
+                        {isVerified ? (
+                            <Badge className="bg-green-100 text-green-700 border-green-200 hover:bg-green-100 px-3 py-1">
+                                <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Terverifikasi
+                            </Badge>
+                        ) : (
+                            <Badge className="bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-100 px-3 py-1">
+                                <Clock className="w-3.5 h-3.5 mr-1" /> Menunggu Verifikasi
+                            </Badge>
+                        )}
                     </div>
-                    <div className="p-6 rounded-xl shadow-md border space-y-6 mt-4">
-                        <div className="mt-6 border-t pt-4 space-y-2 text-sm">
-                            <h3 className="font-bold text-lg">Informasi Tambahan</h3>
+                </div>
+            </div>
 
-                            {tournament.data.storeName && (
-                                <div className="flex justify-between">
-                                    <span>Nama Toko</span>
-                                    <span className="text-right">{tournament.data.storeName}</span>
+            <div className="container mx-auto px-4 py-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    {/* LEFT COLUMN: Payment & Status Instructions */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {!isVerified && (
+                            <Card className="border-amber-200 bg-amber-50/30 overflow-hidden">
+                                <CardHeader className="bg-amber-100/50 pb-4">
+                                    <CardTitle className="text-lg flex items-center gap-2 text-amber-900">
+                                        <CreditCard className="w-5 h-5 text-amber-700" /> Instruksi Pembayaran
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="pt-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-4">
+                                            <div className="bg-white p-4 rounded-xl border border-amber-200 shadow-sm">
+                                                <p className="text-xs font-bold text-amber-600 uppercase mb-2">Tujuan Transfer</p>
+                                                <p className="text-sm text-muted-foreground uppercase font-medium">{tournament.data?.tournament?.event?.bank?.BankType}</p>
+                                                <p className="text-2xl font-mono font-bold tracking-tighter text-slate-900 my-1">
+                                                    {tournament.data?.tournament?.event?.bank?.BankNo}
+                                                </p>
+                                                <p className="text-sm font-medium">a.n. {tournament.data?.tournament?.event?.bank?.BankName}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col justify-between">
+                                            <div className="text-sm space-y-3">
+                                                <div className="flex gap-3">
+                                                    <span className="bg-amber-200 text-amber-800 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                                                    <p>Transfer sesuai <b>Total Bayar</b> di rincian tagihan.</p>
+                                                </div>
+                                                <div className="flex gap-3">
+                                                    <span className="bg-amber-200 text-amber-800 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                                                    <p>Screenshot atau foto bukti transfer Anda.</p>
+                                                </div>
+                                                <div className="flex gap-3">
+                                                    <span className="bg-amber-200 text-amber-800 w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                                                    <p>Kirim bukti ke panitia melalui link WhatsApp di bawah.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            {tournament.data?.tournament?.event?.bank?.noHp && (
+                                                <Button asChild className="mt-6 bg-green-600 hover:bg-green-700 text-white w-full">
+                                                    <Link target="_blank" to={'https://wa.me/' + formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp)}>
+                                                        Kirim Bukti via WhatsApp <ExternalLink className="w-4 h-4 ml-2" />
+                                                    </Link>
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {isVerified ? (
+                            <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center flex flex-col items-center">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                                    <CheckCircle2 className="w-10 h-10" />
                                 </div>
-                            )}
-
-                            {tournament.data.storeAddress && (
-                                <div className="flex justify-between">
-                                    <span>Alamat Toko</span>
-                                    <span className="text-right">{tournament.data.storeAddress}</span>
+                                <h2 className="text-2xl font-bold text-green-900">Pembayaran Terverifikasi</h2>
+                                <p className="text-green-700 mt-2 max-w-md">Terima kasih! Pembayaran Anda sudah kami terima. Silakan cek email atau dashboard secara berkala untuk info turnamen.</p>
+                            </div>
+                        ) : (
+                            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 flex gap-4 items-start">
+                                <div className="bg-blue-100 p-2 rounded-full text-blue-600">
+                                    <Clock className="w-5 h-5" />
                                 </div>
-                            )}
-
-                            {tournament.data.equipmentSource && (
-                                <div className="flex justify-between">
-                                    <span>Sumber Peralatan</span>
-                                    <span className="text-right">{tournament.data.equipmentSource ? 'Sendiri' : 'Panitia'}</span>
-                                </div>
-                            )}
-
-                            {tournament.data.equipmentOwned && (
                                 <div>
-                                    <p className="font-medium">Peralatan yang Dibawa:</p>
-                                    <ul className="list-disc list-inside pl-4 mt-1">
-                                        {JSON.parse(tournament.data.equipmentOwned).map((item: string, index: number) => (
-                                            <li key={index}>{item}</li>
-                                        ))}
-                                    </ul>
+                                    <h3 className="font-semibold text-blue-900 leading-none mb-2">Menunggu Konfirmasi</h3>
+                                    <p className="text-sm text-blue-700">Setelah Anda mengirim bukti transfer, tim kami akan melakukan pengecekan maksimal dalam 1x24 jam.</p>
                                 </div>
-                            )}
+                            </div>
+                        )}
+
+                        {/* Additional Info Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Card>
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-bold flex items-center gap-2">
+                                        <User className="w-4 h-4 text-primary" /> Informasi Kontestan
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="text-sm space-y-2">
+                                    <div className="flex justify-between font-medium">
+                                        <span className="text-muted-foreground">Tipe</span>
+                                        <span>{tournament.data.playerType}</span>
+                                    </div>
+                                    <div className="flex justify-between font-medium">
+                                        <span className="text-muted-foreground">Status Pendaftar</span>
+                                        <span className="text-primary">User Terdaftar</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-sm font-bold flex items-center gap-2">
+                                        <Store className="w-4 h-4 text-primary" /> Informasi Toko
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="text-sm space-y-2">
+                                    <div className="flex justify-between font-medium">
+                                        <span className="text-muted-foreground">Nama Toko</span>
+                                        <span>{tournament.data.storeName || "-"}</span>
+                                    </div>
+                                    <div className="flex justify-between font-medium text-right">
+                                        <span className="text-muted-foreground">Lokasi</span>
+                                        <span className="max-w-[150px] truncate">{tournament.data.storeAddress || "-"}</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         </div>
                     </div>
 
-                    {tournament.data.isVerified === false && (
-                        <div className="bg-red-100 text-red-700 p-4 rounded-md shadow-md mt-6">
-                            <h2 className="text-lg font-semibold">Pendaftaran Anda Belum Diverifikasi</h2>
-                            <p>Silakan tunggu konfirmasi dari panitia.</p>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button variant="destructive" className="mt-4">Batalkan pendaftaran</Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Konfirmasi pembatalan?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Jika anda membatalkan pendaftaran, semua data yang terkait dengan pendaftaran ini akan dihapus dan tidak dapat dipulihkan.
-                                            apabila anda yakin ingin melanjutkan, silakan klik tombol "Lanjutkan" di bawah ini.
-                                            <br />
-                                            <br />
-                                            Jika anda sudah melakukan pembayaran, silakan hubungi panitia untuk meminta pengembalian dana.
-                                            <br />
-                                            Apakah anda yakin ingin melanjutkan?
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => deletMutation(tournament?.data?.id)}>Continue</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        </div>
-                    )}
-                    {tournament.data.isVerified === true && (
-                        <div className="bg-green-100 text-green-700 p-4 rounded-md shadow-md mt-6">
-                            <h2 className="text-lg font-semibold">Pendaftaran Anda Telah Diverifikasi</h2>
-                        </div>
-                    )}
+                    {/* RIGHT COLUMN: Invoice Details */}
+                    <div className="lg:col-span-1">
+                        <Card className="sticky top-24 shadow-lg border-2 border-slate-200">
+                            <CardHeader className="border-b bg-slate-50">
+                                <div className="flex items-center gap-2">
+                                    <Receipt className="w-5 h-5 text-slate-500" />
+                                    <CardTitle className="text-lg">Ringkasan Invoice</CardTitle>
+                                </div>
+                                <p className="text-xs text-muted-foreground">Dibuat pada {new Date(tournament.data.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                            </CardHeader>
+                            <CardContent className="pt-6 space-y-4">
+                                <div className="space-y-3">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground flex items-center gap-2">
+                                            <Package className="w-3.5 h-3.5" /> Paket {selectedPackage?.value}
+                                        </span>
+                                        <span className="font-semibold">{rupiahFormat(selectedPackage?.amount || 0)}</span>
+                                    </div>
+
+                                    {tournament.data.usingLogo && (
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">Biaya Logo</span>
+                                            <span className="font-semibold text-green-600">+{rupiahFormat(tournament.data.tournament.usingLogoPrice)}</span>
+                                        </div>
+                                    )}
+
+                                    <Separator className="my-4" />
+
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="text-xs font-bold uppercase text-muted-foreground">Total Pembayaran</p>
+                                            <p className="text-2xl font-bold text-primary tracking-tight">{rupiahFormat(tournament.data.price)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Separator className="my-2" />
+                                
+                                <div className="bg-slate-50 p-3 rounded-lg space-y-2">
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase uppercase leading-none">Peralatan</p>
+                                    <p className="text-sm font-medium leading-none">
+                                        {tournament.data.equipmentSource ? 'Bawa Sendiri' : 'Disediakan Panitia'}
+                                    </p>
+                                    {tournament.data.equipmentOwned && (
+                                        <ul className="text-[11px] list-disc list-inside text-muted-foreground">
+                                            {JSON.parse(tournament.data.equipmentOwned).map((item: string, i: number) => (
+                                                <li key={i}>{item}</li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+
+                                {!isVerified && (
+                                    <div className="pt-6">
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="ghost" className="w-full text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors">
+                                                    Batalkan Pendaftaran
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle className="flex items-center gap-2">
+                                                        <AlertTriangle className="w-5 h-5 text-red-500" /> Batalkan?
+                                                    </AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Tindakan ini tidak dapat dibatalkan. Semua data pendaftaran Anda akan dihapus secara permanen.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Kembali</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => deletMutation(tournament.data.id)} className="bg-red-600">
+                                                        Ya, Batalkan
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
 
                 </div>
             </div>

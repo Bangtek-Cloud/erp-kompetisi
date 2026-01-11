@@ -40,7 +40,7 @@ export default function UpdateBankAccount() {
     queryKey: ["bank", id],
     queryFn: async () => {
       if (!id) throw new Error("Bank ID is missing");
-      const response = await getBankById(accessToken || "", id);
+      const response = await getBankById(id);
       if (response.success) {
         return response.data;
       }
@@ -62,7 +62,7 @@ export default function UpdateBankAccount() {
 
   const { mutate: mutateUpdate, isPending: isUpdating } = useMutation({
     mutationFn: async (data: IBank) => {
-      const response = await updateBankAccount(accessToken || "", id || "", data);
+      const response = await updateBankAccount(id || "", data)
       if (response.success) {
         toast.success("Bank Account updated successfully");
         queryClient.invalidateQueries({ queryKey: ["bank-management"] });

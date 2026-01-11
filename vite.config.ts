@@ -16,4 +16,13 @@ export default defineConfig({
     host: true,
     allowedHosts: true,
   },
+   server: {
+    proxy: {
+      "/api": {
+        target: "https://api.bangtek.org/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ep/, ''),
+      }
+    },
+  },
 })

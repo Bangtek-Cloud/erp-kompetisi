@@ -7,13 +7,15 @@ interface ErrorResponse {
     alreadyRegistered?: boolean;
 }
 
-export const getAllTournaments = async (accessToken: string) => {
+export const getAllTournaments = async (param: {
+    page: number;
+    limit: number;
+    search?: string;
+}
+) => {
+    const query = new URLSearchParams(param as any).toString();
     try {
-        const response = await genericsInstance.get("/tournaments", {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.get("/tournaments?" + query);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -209,29 +211,28 @@ export const updateContestantById = async (id: number, data: any, accessToken: s
 
 export const exportDataTournament = async (id: string, status: string, accessToken: string) => {
     try {
-      const response = await genericsInstance.get(`/contestants/export/${id}/${status}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        responseType: 'blob',
-      });
-  
-      const blob = new Blob([response.data], { type: 'text/csv' });
-      const url = window.URL.createObjectURL(blob);
-  
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'peserta-turnamen.csv');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-  
+        const response = await genericsInstance.get(`/contestants/export/${id}/${status}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            responseType: 'blob',
+        });
+
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'peserta-turnamen.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+
     } catch (error) {
-      if (error instanceof Error) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        console.error("Export error:", axiosError);
-      }
+        if (error instanceof Error) {
+            const axiosError = error as AxiosError<ErrorResponse>;
+            console.error("Export error:", axiosError);
+        }
     }
-  }
-  
+}

@@ -7,14 +7,15 @@ interface ErrorResponse {
     success?: boolean;
 }
 
-export const getAllEvents = async (accessToken: string) => {
+export const getAllEvents = async (params: {
+    page: number;
+    limit: number;
+    search?: string;
+    status?: string;
+}) => {
+    const query = new URLSearchParams(params as any).toString();
     try {
-        const response = await genericsInstance.get('events', {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
+        const response = await genericsInstance.get(`events?${query}`)
         return response.data
     } catch (error) {
         if (error instanceof Error) {
@@ -26,14 +27,9 @@ export const getAllEvents = async (accessToken: string) => {
     }
 }
 
-export const getEventById = async (id: string, accessToken: string) => {
+export const getEventById = async (id: string) => {
     try {
-        const response = await genericsInstance.get('events/' + id, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
+        const response = await genericsInstance.get('events/' + id)
         return response.data
     } catch (error) {
         if (error instanceof Error) {
@@ -45,12 +41,11 @@ export const getEventById = async (id: string, accessToken: string) => {
     }
 }
 
-export const createEvent = async (data: any, accessToken: string) => {
+export const createEvent = async (data: FormData) => {
     try {
         const response = await genericsInstance.post('events', data, {
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${accessToken}`,
             },
         });
         return response.data;
@@ -64,12 +59,11 @@ export const createEvent = async (data: any, accessToken: string) => {
     }
 }
 
-export const updateEvent = async (id: string, data: any, accessToken: string) => {
+export const updateEvent = async (id: string, data: FormData) => {
     try {
         const response = await genericsInstance.put('events/' + id, data, {
             headers: {
                 "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${accessToken}`,
             },
         })
         return response.data
@@ -83,14 +77,9 @@ export const updateEvent = async (id: string, data: any, accessToken: string) =>
     }
 }
 
-export const deleteEvent = async (id:string, accessToken: string) => {
+export const deleteEvent = async (id: string,) => {
     try {
-        const response = await genericsInstance.delete('events/' + id, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
+        const response = await genericsInstance.delete('events/' + id)
         return response.data
     } catch (error) {
         if (error instanceof Error) {

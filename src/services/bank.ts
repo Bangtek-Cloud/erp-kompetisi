@@ -6,13 +6,9 @@ interface ErrorResponse {
     success?: boolean;
 }
 
-export const getAllBank = async (accessToken: string) => {
+export const getAllBank = async () => {
     try {
-        const response = await genericsInstance.get('/bank', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.get('/bank')
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -24,13 +20,9 @@ export const getAllBank = async (accessToken: string) => {
     }
 }
 
-export const createBankAccount = async (accessToken: string, data: any) => {
+export const createBankAccount = async (data: FormData) => {
     try {
-        const response = await genericsInstance.post('/bank', data, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            },
-        });
+        const response = await genericsInstance.post('/bank', data);
         console.log(response.data)
         if (response.data.success === false) {
             return {
@@ -52,13 +44,9 @@ export const createBankAccount = async (accessToken: string, data: any) => {
     }
 }
 
-export const updateBankAccount = async (accessToken: string, id: string, data: any) => {
+export const updateBankAccount = async (id: string, data: any) => {
     try {
-        const response = await genericsInstance.put('/bank/' + id, data, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.put('/bank/' + id, data);
         if (response.data.success === false) {
             return {
                 error: response.data.error
@@ -78,13 +66,9 @@ export const updateBankAccount = async (accessToken: string, id: string, data: a
     }
 }
 
-export const deleteBankAccount = async (accessToken: string, id: string) => {
+export const deleteBankAccount = async (id: string) => {
     try {
-        const response = await genericsInstance.delete('bank/' + id, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
+        const response = await genericsInstance.delete('bank/' + id)
         return response.data
     } catch (error) {
         if (error instanceof Error) {
@@ -96,13 +80,9 @@ export const deleteBankAccount = async (accessToken: string, id: string) => {
     }
 }
 
-export const getBankById = async (accessToken: string, id: string) => {
+export const getBankById = async (id: string) => {
     try {
-        const response = await genericsInstance.get('/bank/'+ id, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.get('/bank/'+ id);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {

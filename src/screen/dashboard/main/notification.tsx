@@ -5,8 +5,18 @@ import { getAllTournamentByUserId } from "@/services/tournament";
 import useAuthStore from "@/store/feature/authStand";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { Clock, CheckCircle, AlertCircle, CalendarX, Eye, CreditCard } from "lucide-react";
+import { 
+    CheckCircle2, 
+    AlertCircle, 
+    CalendarX, 
+    Eye, 
+    CreditCard, 
+    Calendar,
+    Trophy,
+    ChevronRight
+} from "lucide-react";
 import LoadingSolder from "@/components/loading-solder";
+import { cn } from "@/lib/utils";
 
 function NotificationPage() {
     const { accessToken } = useAuthStore();
@@ -15,99 +25,132 @@ function NotificationPage() {
         queryKey: ['notificationsTournament'],
         queryFn: async () => {
             const response = await getAllTournamentByUserId(accessToken as string);
-            if (response.error) {
-                throw new Error(response.error);
-            }
+            if (response.error) throw new Error(response.error);
             return response.data;
         }
-    })
+    });
 
-    if (isPending) {
-        return (
-           <LoadingSolder />
-        );
-    }
+    if (isPending) return <LoadingSolder />;
+
     return (
-        <div className="p-6 w-full">
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-3xl font-bold">Notifikasi</h1>
-                <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-sm">
-                        {tournament?.length || 0} Tournament
-                    </Badge>
+        <div className="max-w-4xl mx-auto p-4 md:p-6 w-full">
+            {/* Header Ringkas */}
+            <div className="flex items-end justify-between mb-6 border-b pb-4">
+                <div>
+                    <h1 className="text-xl font-bold tracking-tight">Turnamen Saya</h1>
+                    <p className="text-xs text-muted-foreground">Kelola pendaftaran dan status pembayaran</p>
                 </div>
+                <Badge variant="outline" className="text-[11px] font-medium px-2 py-0">
+                    {tournament?.length || 0} Terdaftar
+                </Badge>
             </div>
 
-            <div className="space-y-4">
-                {tournament && tournament.map((item: any) => (
-                    <Card key={item.id} className="hover:shadow-md transition-all duration-200 border-l-4 border-l-primary">
-                        <div className="flex items-start p-6">
-                            <div className="flex-1">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-lg font-semibold">{item.tournament.name}</h3>
-                                    {new Date(item.tournament.startDate) < new Date() ? (
-                                        <Badge variant="secondary" className="bg-gray-100 text-gray-600">
-                                            <Clock className="w-3 h-3 mr-1" />
-                                            Event Selesai
-                                        </Badge>
-                                    ) : (
-                                        <Badge variant={item.isVerified ? 'default' : 'destructive'} className="flex items-center">
-                                            {item.isVerified ? (
-                                                <>
-                                                    <CheckCircle className="w-3 h-3 mr-1" />
-                                                    Sudah Dibayar
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <AlertCircle className="w-3 h-3 mr-1" />
-                                                    Belum Dibayar
-                                                </>
-                                            )}
-                                        </Badge>
-                                    )}
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-2">
-                                    {new Date(item.tournament.startDate).toLocaleDateString('id-ID', {
-                                        weekday: 'long',
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </p>
-                                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                                    {item.tournament.description}
-                                </p>
-                                <div className="flex justify-end">
-                                    {new Date(item.tournament.startDate) < new Date() ? (
-                                        <Button disabled variant="outline" size="sm" className="gap-2">
-                                            <CalendarX className="w-4 h-4" />
-                                            Event Sudah Selesai
-                                        </Button>
-                                    ) : (
-                                        <Link to={`/apps/tournament/confirm/${item.tournament.id}`}>
-                                            <Button size="sm" className="gap-2">
-                                                {item.isVerified ? (
-                                                    <>
-                                                        <Eye className="w-4 h-4" />
-                                                        Lihat Detail
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <CreditCard className="w-4 h-4" />
-                                                        Bayar Sekarang
-                                                    </>
+            <div className="flex flex-col gap-2">
+                {tournament && tournament.length > 0 ? (
+                    tournament.map((item: any) => {
+                        const isExpired = new Date(item.tournament.startDate) < new Date();
+                        const isVerified = item.isVerified;
+
+                        return (
+                            <Card 
+                                key={item.id} 
+                                className={cn(
+                                    "group transition-all hover:bg-slate-50 border shadow-none",
+                                    isExpired && "opacity-75 bg-slate-50/50"
+                                )}
+                            >
+                                <div className="flex flex-col sm:flex-row sm:items-center p-3 gap-3">
+                                    
+                                    {/* Icon & Info Utama */}
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
+                                            isVerified ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600",
+                                            isExpired && "bg-slate-200 text-slate-500"
+                                        )}>
+                                            <Trophy className="w-5 h-5" />
+                                        </div>
+                                        
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-2 mb-0.5">
+                                                <h3 className="text-sm font-bold truncate leading-none">
+                                                    {item.tournament.name}
+                                                </h3>
+                                                {isVerified ? (
+                                                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                                                ) : !isExpired && (
+                                                    <AlertCircle className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
                                                 )}
-                                            </Button>
-                                        </Link>
-                                    )}
+                                            </div>
+                                            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                                                <span className="flex items-center gap-1">
+                                                    <Calendar className="w-3 h-3" />
+                                                    {new Date(item.tournament.startDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                </span>
+                                                <span className="font-medium px-1.5 py-0 border rounded bg-white capitalize">
+                                                    {item.playerType}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Status & Action */}
+                                    <div className="flex items-center justify-between sm:justify-end gap-3 border-t sm:border-t-0 pt-2 sm:pt-0">
+                                        
+                                        {/* Status Badge Ringkas */}
+                                        <div className="flex flex-col items-end mr-2">
+                                            {isExpired ? (
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Selesai</span>
+                                            ) : isVerified ? (
+                                                <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">Terbayar</span>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">Perlu Bayar</span>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            {isExpired ? (
+                                                <Button disabled variant="ghost" size="sm" className="h-8 text-[11px]">
+                                                    <CalendarX className="w-3.5 h-3.5 mr-1" /> Expired
+                                                </Button>
+                                            ) : (
+                                                <Link to={`/apps/tournament/confirm/${item.tournament.id}`}>
+                                                    <Button 
+                                                        size="sm" 
+                                                        variant={isVerified ? "outline" : "default"}
+                                                        className={cn(
+                                                            "h-8 text-[11px] px-3 gap-1.5",
+                                                            !isVerified && "bg-amber-600 hover:bg-amber-700 shadow-sm"
+                                                        )}
+                                                    >
+                                                        {isVerified ? (
+                                                            <><Eye className="w-3.5 h-3.5" /> Detail</>
+                                                        ) : (
+                                                            <><CreditCard className="w-3.5 h-3.5" /> Bayar Sekarang</>
+                                                        )}
+                                                        <ChevronRight className="w-3 h-3 opacity-50" />
+                                                    </Button>
+                                                </Link>
+                                            )}
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </div>
-                    </Card>
-                ))}
+                            </Card>
+                        );
+                    })
+                ) : (
+                    /* Compact Empty State */
+                    <div className="text-center py-12 border-2 border-dashed rounded-xl">
+                        <p className="text-sm text-muted-foreground">Tidak ada turnamen yang diikuti.</p>
+                        <Button asChild variant="link" size="sm" className="mt-1">
+                            <Link to="/apps/tournament">Cari turnamen sekarang</Link>
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );
-};
+}
 
 export default NotificationPage;
