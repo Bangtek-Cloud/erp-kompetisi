@@ -21,24 +21,26 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import useAuthStore from "@/store/feature/authStand";
 import LoadingSolder from "@/components/loading-solder";
-import { 
-    CheckCircle2, 
-    Clock, 
-    CreditCard, 
-    ExternalLink, 
-    Store, 
-    Package, 
-    User, 
+import {
+    CheckCircle2,
+    Clock,
+    CreditCard,
+    ExternalLink,
+    Store,
+    Package,
+    User,
     AlertTriangle,
     ArrowLeft,
-    Receipt
+    Receipt,
+    MessageCircle,
+    CheckCircle
 } from "lucide-react";
 
 export default function ConfirmTournament() {
     const { tournamentId } = useParams();
     const queryClient = useQueryClient();
     const { user, accessToken } = useAuthStore();
-    const [tournament, setTournament] = useState<{loading: boolean, data: any}>({
+    const [tournament, setTournament] = useState<{ loading: boolean, data: any }>({
         loading: true,
         data: null
     });
@@ -88,9 +90,9 @@ export default function ConfirmTournament() {
     const isVerified = tournament.data.isVerified;
 
     return (
-        <main className="min-h-screen bg-slate-50/50 pb-20">
+        <main className="min-h-screen pb-20">
             {/* Header Area */}
-            <div className="bg-white border-b sticky top-0 z-10">
+            <div className="bg-white dark:bg-slate-800 shadow-lg border-b sticky top-0 z-10">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-2">
                         <ArrowLeft className="w-4 h-4" /> Kembali
@@ -112,14 +114,14 @@ export default function ConfirmTournament() {
 
             <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
+
                     {/* LEFT COLUMN: Payment & Status Instructions */}
                     <div className="lg:col-span-2 space-y-6">
                         {!isVerified && (
                             <Card className="border-amber-200 bg-amber-50/30 overflow-hidden">
-                                <CardHeader className="bg-amber-100/50 pb-4">
-                                    <CardTitle className="text-lg flex items-center gap-2 text-amber-900">
-                                        <CreditCard className="w-5 h-5 text-amber-700" /> Instruksi Pembayaran
+                                <CardHeader className="pb-4">
+                                    <CardTitle className="text-lg flex items-center gap-2 text-amber-900 dark:text-amber-400">
+                                        <CreditCard className="w-5 h-5 text-amber-700 dark:text-amber-400" /> Instruksi Pembayaran
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="pt-6">
@@ -131,7 +133,7 @@ export default function ConfirmTournament() {
                                                 <p className="text-2xl font-mono font-bold tracking-tighter text-slate-900 my-1">
                                                     {tournament.data?.tournament?.event?.bank?.BankNo}
                                                 </p>
-                                                <p className="text-sm font-medium">a.n. {tournament.data?.tournament?.event?.bank?.BankName}</p>
+                                                <p className="text-sm font-medium text-muted-foreground">a.n. {tournament.data?.tournament?.event?.bank?.BankName}</p>
                                             </div>
                                         </div>
                                         <div className="flex flex-col justify-between">
@@ -149,14 +151,67 @@ export default function ConfirmTournament() {
                                                     <p>Kirim bukti ke panitia melalui link WhatsApp di bawah.</p>
                                                 </div>
                                             </div>
-                                            
+
                                             {tournament.data?.tournament?.event?.bank?.noHp && (
-                                                <Button asChild className="mt-6 bg-green-600 hover:bg-green-700 text-white w-full">
-                                                    <Link target="_blank" to={'https://wa.me/' + formatPhoneNumber(tournament.data?.tournament?.event?.bank?.noHp)}>
-                                                        Kirim Bukti via WhatsApp <ExternalLink className="w-4 h-4 ml-2" />
-                                                    </Link>
-                                                </Button>
+                                                <div className="mt-8 rounded-2xl p-6">
+
+                                                    {/* CTA WhatsApp */}
+                                                    <Button
+                                                        asChild
+                                                        className="mt-6 h-12 w-full rounded-xl bg-green-600 text-white hover:bg-green-700"
+                                                    >
+                                                        <Link
+                                                            target="_blank"
+                                                            to={
+                                                                "https://wa.me/" +
+                                                                formatPhoneNumber(
+                                                                    tournament.data?.tournament?.event?.bank?.noHp
+                                                                )
+                                                            }
+                                                        >
+                                                            <span className="flex items-center justify-center gap-2">
+                                                                <MessageCircle className="h-5 w-5" />
+                                                                Kirim Bukti via WhatsApp
+                                                                <ExternalLink className="h-4 w-4 opacity-80" />
+                                                            </span>
+                                                        </Link>
+                                                    </Button>
+
+                                                    {/* Divider */}
+                                                    <div className="my-6 flex items-center gap-3">
+                                                        <div className="h-px flex-1 bg-border" />
+                                                        <span className="text-xs text-muted-foreground">
+                                                            alternatif
+                                                        </span>
+                                                        <div className="h-px flex-1 bg-border" />
+                                                    </div>
+
+                                                    {/* Fallback Manual */}
+                                                    <div className="rounded-xl bg-card p-4">
+                                                        <p className="text-sm font-medium text-foreground">
+                                                            Jika tombol WhatsApp tidak bisa dibuka
+                                                        </p>
+
+                                                        <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
+                                                            <li className="flex gap-2">
+                                                                <span className="font-medium text-foreground">1.</span>
+                                                                Simpan bukti transfer (screenshot / foto)
+                                                            </li>
+                                                            <li className="flex gap-2">
+                                                                <span className="font-medium text-foreground">2.</span>
+                                                                Kirim ke nomor: {formatPhoneNumber(
+                                                                    tournament.data?.tournament?.event?.bank?.noHp
+                                                                )}
+                                                            </li>
+                                                            <li className="flex gap-2">
+                                                                <span className="font-medium text-foreground">3.</span>
+                                                                Sertakan nama tim & nama turnamen
+                                                            </li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
                                             )}
+
                                         </div>
                                     </div>
                                 </CardContent>
@@ -226,7 +281,7 @@ export default function ConfirmTournament() {
                     {/* RIGHT COLUMN: Invoice Details */}
                     <div className="lg:col-span-1">
                         <Card className="sticky top-24 shadow-lg border-2 border-slate-200">
-                            <CardHeader className="border-b bg-slate-50">
+                            <CardHeader className="border-b">
                                 <div className="flex items-center gap-2">
                                     <Receipt className="w-5 h-5 text-slate-500" />
                                     <CardTitle className="text-lg">Ringkasan Invoice</CardTitle>
@@ -260,8 +315,8 @@ export default function ConfirmTournament() {
                                 </div>
 
                                 <Separator className="my-2" />
-                                
-                                <div className="bg-slate-50 p-3 rounded-lg space-y-2">
+
+                                <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg space-y-2">
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase uppercase leading-none">Peralatan</p>
                                     <p className="text-sm font-medium leading-none">
                                         {tournament.data.equipmentSource ? 'Bawa Sendiri' : 'Disediakan Panitia'}
