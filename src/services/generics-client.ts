@@ -3,7 +3,7 @@ import { refreshToken } from "./auth";
 import useAuthStore from "@/store/feature/authStand";
 
 const genericsInstance = axios.create({
-  baseURL: "/ep/api/v1",
+  baseURL: "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

@@ -21,10 +21,10 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    location /ep/ {
+    location /api/ {
         set $target_url ${BACKEND_URL};
         
-        rewrite ^/ep/(.*) /ep/$1 break;
+        rewrite ^/api/(.*) /api/$1 break;
         
         proxy_pass $target_url;
 
