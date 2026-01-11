@@ -50,7 +50,7 @@ jobs:
           push: true
           tags: ${{ env.GHCR_IMAGE }}
 
-  deploy-beta:
+  deploy-prod:
     runs-on: ubuntu-latest
     needs: build-and-push
     environment: prod
