@@ -3,12 +3,12 @@ import { refreshToken } from "./auth";
 import useAuthStore from "@/store/feature/authStand";
 
 const genericsInstance = axios.create({
-  baseURL: "/ep",
+  baseURL: "/ep/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
-
 });
+
 
 // if status 403 then logout
 genericsInstance.interceptors.response.use(
