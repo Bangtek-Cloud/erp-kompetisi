@@ -96,10 +96,9 @@ export default function TechniciansPage() {
       header: () => <div style={{ minWidth: '100px' }}>Avatar</div>,
       accessorFn: row => row.user.avatar,
       cell: ({ row }) => {
-        const usingAvatar = row.original.user.usingAvatar
         const avatar = row.original.user.avatar
         return (
-          <img src={usingAvatar ? import.meta.env.VITE_BASE_S3 +  avatar : avatar} className="w-24 h-24" />
+          <img src={avatar} className="w-24 h-24" />
         )
       }
     },

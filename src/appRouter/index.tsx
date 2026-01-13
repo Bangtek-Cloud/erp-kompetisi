@@ -24,12 +24,10 @@ import TournamentUpdatePage from "@/screen/dashboard/main/tournament/update";
 import ConfirmTournament from "@/screen/dashboard/main/tournament/confirm";
 import NotificationPage from "@/screen/dashboard/main/notification";
 import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate";
-import AboutUsPage from "@/screen/landing/about";
 import TermsPage from "@/screen/landing/terms";
 import PrivacyPage from "@/screen/landing/privacy";
 import WebsiteIndex from "@/screen/dashboard/management/website";
 import useAuthStore from "@/store/feature/authStand";
-import UpdateOrCreateWebsite from "@/screen/dashboard/management/website/updateOrCreate";
 import WebsiteRouteIndex from "@/screen/dashboard/management/webRouter";
 import UpdateOrCreateWebsiteRoute from "@/screen/dashboard/management/webRouter/updateOrCreate";
 import Userlist from "@/screen/dashboard/management/user";
@@ -39,16 +37,29 @@ import AssetsManagement from "@/screen/dashboard/finance/assets";
 import BankManagement from "@/screen/dashboard/management/bank";
 import NewBankAccount from "@/screen/dashboard/management/bank/new";
 import UpdateBankAccount from "@/screen/dashboard/management/bank/update";
+import GalleryPage from "@/screen/dashboard/gallery";
+import ClipPage from "@/screen/dashboard/clip";
+import { ArticleListPage } from "@/screen/dashboard/article";
+import { ArticleFormPage } from "@/screen/dashboard/article/upsert";
+import EventLanding from "@/screen/landing/event";
+import TournamentLanding from "@/screen/landing/tournament";
+import GalleryLanding from "@/screen/landing/gallery";
+import VideosLanding from "@/screen/landing/clip";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
     const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
+    const isEditor = user?.role === "EDITOR" || user?.role === 'ADMIN' || user?.role === 'SU';
+
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LandingLayout />} errorElement={<h1>Terjadi kesalahan</h1>} loader={() => new Promise(resolve => setTimeout(resolve, 1000))}>
                     <Route index element={<LandingHome />} />
-                    <Route path="about" element={<AboutUsPage />} />
+                    <Route path="events" element={<EventLanding />} />
+                    <Route path="tournaments" element={<TournamentLanding />} />
+                    <Route path="gallery" element={<GalleryLanding />} />
+                    <Route path="videos" element={<VideosLanding />} />
                     <Route path="terms" element={<TermsPage />} />
                     <Route path="privacy" element={<PrivacyPage />} />
                     <Route path="*" element={<Navigate to="/" />} />
@@ -87,8 +98,6 @@ export default function AppRouter() {
                         {isAdmin && (
                             <Route path="management">
                                 <Route path="website" element={<WebsiteIndex />} />
-                                <Route path="website/create" element={<UpdateOrCreateWebsite actionType="create" />} />
-                                <Route path="website/update/:websiteId" element={<UpdateOrCreateWebsite actionType="update" />} />
                                 <Route path="web-route" element={<WebsiteRouteIndex />} />
                                 <Route path="web-route/create" element={<UpdateOrCreateWebsiteRoute actionType="create" />} />
                                 <Route path="web-route/update/:webRouteId" element={<UpdateOrCreateWebsiteRoute actionType="update" />} />
@@ -101,6 +110,17 @@ export default function AppRouter() {
                                 <Route path="bank" element={<BankManagement />} />
                                 <Route path="bank/new" element={<NewBankAccount />} />
                                 <Route path="bank/update/:id" element={<UpdateBankAccount />} />
+                            </Route>
+                        )}
+
+                        {isEditor && (
+                            <Route path="editor">
+                                <Route path="gallery" element={<GalleryPage />} />
+                                <Route path="video" element={<ClipPage />} />
+                                <Route path="article" element={<ArticleListPage />} />
+                                <Route path="article/create" element={<ArticleFormPage mode="create" />} />
+                                <Route path="article/:id" element={<ArticleFormPage mode="edit" />} />
+
                             </Route>
                         )}
 

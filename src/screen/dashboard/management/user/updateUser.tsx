@@ -35,13 +35,13 @@ export default function AccountSettingById() {
   })
 
   const updateQuery = () => {
-    queryClient.invalidateQueries({queryKey: ['user-management']})
+    queryClient.invalidateQueries({ queryKey: ['user-management'] })
     navigate(-1)
   }
 
   const [preview, setPreview] = useState('')
 
-  const {isLoading} = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ['user', userId],
     queryFn: async () => {
       const response = await fetchUserById(userId, accessToken)
@@ -59,11 +59,7 @@ export default function AccountSettingById() {
             fullName: user.name || "",
             avatar: null,
           });
-          if (user?.usingAvatar) {
-            setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
-          } else {
-            setPreview(user?.avatar)
-          }
+          setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
         }
         return response.data
       }
@@ -83,7 +79,7 @@ export default function AccountSettingById() {
 
   const handleButtonClick = () => {
     if (formRef.current) {
-      // @ts-ignore
+      // @ts-ignore 
       formRef.current.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     } else {
       submitForm();
@@ -194,7 +190,7 @@ export default function AccountSettingById() {
     return valid;
   };
 
-  if(isLoading){
+  if (isLoading) {
     return <LoadingSolder />
   }
 

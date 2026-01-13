@@ -48,7 +48,7 @@ export default function AboutUsPage() {
                             <blockquote className="mt-6 border-l-2 pl-6 italic">
                                 "Membangun Generasi Teknisi Digital Profesional"
                             </blockquote>
-                            <p className="leading-7 [&:not(:first-child)]:mt-6">
+                            <p className="leading-7 not-first:mt-6">
                                 Sebagai program pencarian bakat (talent scouting) yang
                                 menargetkan teknisi-teknisi terbaik Indonesia untuk didorong
                                 tampil dalam ajang kompetisi internasional

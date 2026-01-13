@@ -6,13 +6,9 @@ interface ErrorResponse {
     success?: boolean;
 }
 
-export const getAllWebsiteSections = async (accessToken: string) => {
+export const getAllWebsiteSections = async () => {
     try {
-        const response = await genericsInstance.get('/web', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.get('/hero');
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -37,12 +33,11 @@ export const getWebsiteSectionByRouteId = async (url: string) => {
     }
 }
 
-export const createWebsiteSection = async (accessToken: string, data: any) => {
+export const upsertHero = async (data: any) => {
     try {
-        const response = await genericsInstance.post('/web', data, {
+        const response = await genericsInstance.post('/hero', data, {
             headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "multipart/form-data",
+                'Content-Type': 'multipart/form-data',
             },
         });
         return response.data;
@@ -55,13 +50,9 @@ export const createWebsiteSection = async (accessToken: string, data: any) => {
     }
 }
 
-export const getWebsiteSectionById = async (accessToken: string, id: string) => {
+export const getWebsiteSectionById = async (id: string) => {
     try {
-        const response = await genericsInstance.get(`/web/${id}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.get(`/web/${id}`);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -72,14 +63,9 @@ export const getWebsiteSectionById = async (accessToken: string, id: string) => 
     }
 }
 
-export const updateWebsiteSection = async (accessToken: string, id: string, data: any) => {
+export const updateWebsiteSection = async (id: string, data: any) => {
     try {
-        const response = await genericsInstance.put(`/web/${id}`, data, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "Content-Type": "multipart/form-data",
-            },
-        });
+        const response = await genericsInstance.put(`/web/${id}`, data);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
@@ -90,13 +76,9 @@ export const updateWebsiteSection = async (accessToken: string, id: string, data
     }
 }
 
-export const deleteWebsiteSection = async (accessToken: string, id: string) => {
+export const deleteWebsiteSection = async (id: string) => {
     try {
-        const response = await genericsInstance.delete(`/web/${id}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const response = await genericsInstance.delete(`/web/${id}`);
         return response.data;
     } catch (error) {
         if (error instanceof Error) {
