@@ -88,7 +88,7 @@ export default function EventUpdateOrCreate({ actionType }: Props) {
 
     const { data: event, isLoading: isEventLoading } = useQuery({
         queryKey: ["event", eventId],
-        queryFn: async () => (await getEventById(eventId! )).data,
+        queryFn: async () => (await getEventById(eventId!)).data,
         enabled: actionType === "update" && !!eventId && !!banks,
     });
 
@@ -107,7 +107,7 @@ export default function EventUpdateOrCreate({ actionType }: Props) {
             });
             setPreview(event.eventLogoUrl);
         }
-    }, [event]);
+    }, [event, form]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -119,39 +119,20 @@ export default function EventUpdateOrCreate({ actionType }: Props) {
         if (!file) return;
 
         if (!file.type.startsWith("image/")) {
-            toast.error("File harus gambar");
+            toast.error("File harus berupa gambar");
             return;
         }
 
-        const img = new Image();
-        img.src = URL.createObjectURL(file);
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            canvas.width = 200;
-            canvas.height = 200;
-            const ctx = canvas.getContext("2d")!;
-            const size = Math.min(img.width, img.height);
+        const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+        if (file.size > MAX_SIZE) {
+            toast.error("Ukuran gambar maksimal 2MB");
+            return;
+        }
 
-            ctx.drawImage(
-                img,
-                (img.width - size) / 2,
-                (img.height - size) / 2,
-                size,
-                size,
-                0,
-                0,
-                200,
-                200
-            );
-
-            canvas.toBlob((blob) => {
-                if (!blob) return;
-                const newFile = new File([blob], file.name, { type: "image/png" });
-                form.setValue("logo", newFile);
-                setPreview(URL.createObjectURL(newFile));
-            });
-        };
+        form.setValue("logo", file);
+        setPreview(URL.createObjectURL(file));
     };
+
 
     /* ===================== SUBMIT ===================== */
     const { mutate, isPending } = useMutation({

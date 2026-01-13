@@ -24,7 +24,6 @@ import TournamentUpdatePage from "@/screen/dashboard/main/tournament/update";
 import ConfirmTournament from "@/screen/dashboard/main/tournament/confirm";
 import NotificationPage from "@/screen/dashboard/main/notification";
 import EventUpdateOrCreate from "@/screen/dashboard/main/schedule/updateOrCreate";
-import AboutUsPage from "@/screen/landing/about";
 import TermsPage from "@/screen/landing/terms";
 import PrivacyPage from "@/screen/landing/privacy";
 import WebsiteIndex from "@/screen/dashboard/management/website";
@@ -42,6 +41,10 @@ import GalleryPage from "@/screen/dashboard/gallery";
 import ClipPage from "@/screen/dashboard/clip";
 import { ArticleListPage } from "@/screen/dashboard/article";
 import { ArticleFormPage } from "@/screen/dashboard/article/upsert";
+import EventLanding from "@/screen/landing/event";
+import TournamentLanding from "@/screen/landing/tournament";
+import GalleryLanding from "@/screen/landing/gallery";
+import VideosLanding from "@/screen/landing/clip";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -53,7 +56,10 @@ export default function AppRouter() {
             <Routes>
                 <Route path="/" element={<LandingLayout />} errorElement={<h1>Terjadi kesalahan</h1>} loader={() => new Promise(resolve => setTimeout(resolve, 1000))}>
                     <Route index element={<LandingHome />} />
-                    <Route path="about" element={<AboutUsPage />} />
+                    <Route path="events" element={<EventLanding />} />
+                    <Route path="tournaments" element={<TournamentLanding />} />
+                    <Route path="gallery" element={<GalleryLanding />} />
+                    <Route path="videos" element={<VideosLanding />} />
                     <Route path="terms" element={<TermsPage />} />
                     <Route path="privacy" element={<PrivacyPage />} />
                     <Route path="*" element={<Navigate to="/" />} />

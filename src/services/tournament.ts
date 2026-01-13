@@ -27,6 +27,26 @@ export const getAllTournaments = async (param: {
     }
 }
 
+export const getAllTournaments2 = async (param: {
+    page: number;
+    limit: number;
+    search?: string;
+}
+) => {
+    const query = new URLSearchParams(param as any).toString();
+    try {
+        const response = await genericsInstance.get("/tournaments/alls?" + query);
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error) {
+            const axiosError = error as AxiosError<ErrorResponse>;
+            return {
+                error: axiosError.response?.data.error,
+            };
+        }
+    }
+}
+
 export const updateTournament = async (accessToken: string, id: string, data: any) => {
     try {
         const response = await genericsInstance.put(`/tournaments/${id}`, data, {

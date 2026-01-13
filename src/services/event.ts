@@ -12,6 +12,7 @@ export const getAllEvents = async (params: {
     limit: number;
     search?: string;
     status?: string;
+    isActive?: string
 }) => {
     const query = new URLSearchParams(params as any).toString();
     try {
