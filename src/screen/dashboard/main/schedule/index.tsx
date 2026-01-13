@@ -62,7 +62,7 @@ export default function SchedulePage() {
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(searchTerm);
-            setPage(1); 
+            setPage(1);
         }, 500);
 
         return () => clearTimeout(handler);
@@ -79,7 +79,7 @@ export default function SchedulePage() {
             }
         }
     })
-   const { data, isLoading, isFetching, error } = useQuery({
+    const { data, isLoading, isFetching, error } = useQuery({
         queryKey: ["events", page, debouncedSearch],
         queryFn: async () => {
             const response = await getAllEvents({
@@ -140,7 +140,7 @@ export default function SchedulePage() {
             {isFetching && <span className="text-xs">Memperbarui data...</span>}
             <div className="space-y-4">
                 {data.data.map((event: IEvent) => (
-                    <div key={event.id} className={`glass p-6 rounded-3xl group hover:border-primary ${event.isActive ? "bg-card" : "bg-card-10 opacity-20"} transition-all duration-500 relative overflow-hidden`}>
+                    <div key={event.id} className={`bg-card p-6 rounded-3xl group hover:border-primary ${event.isActive ? "bg-card" : "bg-card-10 opacity-20"} transition-all duration-500 relative overflow-hidden`}>
                         <div className="absolute top-0 left-0 w-1 h-full bg-slate-800 group-hover:bg-primary transition-colors"></div>
 
                         <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">

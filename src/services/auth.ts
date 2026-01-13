@@ -90,13 +90,15 @@ export const updateUser = async (data: any, accessToken: string) => {
   }
 }
 
-export const getAllUser = async (accessToken: string) => {
+export const getAllUser = async (param: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}) => {
   try {
-    const response = await genericsInstance.get("/user/all-user", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const query = new URLSearchParams(param as any);
+
+    const response = await genericsInstance.get("/user/all-user?" + query.toString());
 
     return response.data;
   } catch (error) {
@@ -164,9 +166,9 @@ export const forceUpdatePasswordHandler = async (data: any, accessToken: string 
   }
 }
 
-export const forceUpdateUser = async (id: string |undefined ,data: any, accessToken: string) => {
+export const forceUpdateUser = async (id: string | undefined, data: any, accessToken: string) => {
   try {
-    const response = await genericsInstance.put('user/force-update/'+id, data, {
+    const response = await genericsInstance.put('user/force-update/' + id, data, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${accessToken}`,
@@ -183,13 +185,9 @@ export const forceUpdateUser = async (id: string |undefined ,data: any, accessTo
   }
 }
 
-export const changeRoleUser = async (data: any, accessToken: string) => {
+export const changeRoleUser = async (data: any) => {
   try {
-    const response = await genericsInstance.post('user/changerole', data, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await genericsInstance.post('user/changerole', data);
     return response.data;
   } catch (error) {
     if (error instanceof Error) {

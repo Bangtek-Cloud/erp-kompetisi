@@ -332,7 +332,7 @@ export default function EventUpdateOrCreate({ actionType }: Props) {
 
                                     <Separator className="my-6" />
                                     <div className="flex justify-between">
-                                        <Button type="button" variant={'outline'} onClick={() => setStep(1)}>
+                                        <Button type="button" variant={'outline'} onClick={() => setStep(2)}>
                                             <ArrowLeft /> Kembali
                                         </Button>
                                         <Button type="submit" disabled={isPending}>
