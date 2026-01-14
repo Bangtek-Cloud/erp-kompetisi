@@ -13,7 +13,7 @@ import { NavNormal } from "./nav-normal"
 import { NavUser } from "./nav-user"
 import { Link } from "react-router"
 import { IUser } from "@/types/user"
-import { FinanceMenu, menuAllUser, menuManagement } from "@/constant/menu"
+import { FinanceMenu, menuAllUser, menuEditor, menuManagement } from "@/constant/menu"
 import useAuthStore from "@/store/feature/authStand";
 
 interface sidebarProps {
@@ -24,6 +24,7 @@ interface sidebarProps {
 export function AppSidebar(props: sidebarProps) {
   const { user } = useAuthStore();
   const isAdmin = user?.role === "ADMIN" || user?.role === "SU";
+  const isEditor = user?.role === "ADMIN" || user?.role === "SU" || user?.role === 'EDITOR';
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader className="bg-background">
@@ -31,7 +32,7 @@ export function AppSidebar(props: sidebarProps) {
           <SidebarMenuItem className="bg-background">
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <Link to="/apps/home">
                 <img src="/B-dark.png" className="w-8 h-8 hidden dark:block" />
@@ -45,11 +46,14 @@ export function AppSidebar(props: sidebarProps) {
       </SidebarHeader>
       <SidebarContent className="bg-background">
         <NavMain items={menuAllUser} />
-         <NavNormal nameMenu="Finance" items={FinanceMenu} />
-        {/*<NavNormal nameMenu="Management" items={data.management} />
+        <NavNormal nameMenu="Finance" items={FinanceMenu} />
+        {/* <NavNormal nameMenu="Management" items={data.management} />
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        {isEditor && (
+          <NavNormal nameMenu="Editor" items={menuEditor} />
+        )}
         {isAdmin && (
-           <NavNormal nameMenu="Management" items={menuManagement} />
+          <NavNormal nameMenu="Management" items={menuManagement} />
         )}
       </SidebarContent>
       <SidebarFooter className="bg-background">

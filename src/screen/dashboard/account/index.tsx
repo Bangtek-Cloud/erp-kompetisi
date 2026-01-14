@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress"
 import useAuthStore from "@/store/feature/authStand"
 
 export default function AccountSettings() {
-  const {accessToken, user, zusLogout} = useAuthStore()
+  const { accessToken, user, zusLogout } = useAuthStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const formRef = useRef(null)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -42,11 +42,7 @@ export default function AccountSettings() {
         fullName: user.name || "",
         avatar: null,
       });
-      if (user?.usingAvatar) {
-        setPreview(import.meta.env.VITE_BASE_S3 + user?.avatar)
-      } else {
-        setPreview(user?.avatar)
-      }
+      setPreview(user?.avatar)
     }
   }, [user]);
 
