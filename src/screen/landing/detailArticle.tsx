@@ -30,7 +30,7 @@ const ArticleDetail: React.FC = () => {
     if (!article) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <h2 className="text-2xl font-heading text-white">Artikel Tidak Ditemukan</h2>
+                <h2 className="text-2xl font-heading dark:text-white text-slate-900">Artikel Tidak Ditemukan</h2>
                 <button
                     onClick={() => navigate('/articles')}
                     className="bg-primary text-white px-6 py-2 rounded-xl font-accent uppercase text-xs tracking-widest"
@@ -52,10 +52,10 @@ const ArticleDetail: React.FC = () => {
                     <ArrowLeft size={16} /> Kembali
                 </Link>
                 <div className="flex items-center gap-4">
-                    <button className="p-2.5 rounded-full bg-white/5 hover:bg-primary/20 transition-all">
+                    <button className="p-2.5 rounded-full bg-slate-900 dark:text-white hover:bg-primary/20 transition-all">
                         <Share2 size={18} />
                     </button>
-                    <button className="p-2.5 rounded-full bg-white/5 hover:bg-primary/20 transition-all">
+                    <button className="p-2.5 rounded-full bg-slate-900 dark:text-white hover:bg-primary/20 transition-all">
                         <Bookmark size={18} />
                     </button>
                 </div>
@@ -68,10 +68,10 @@ const ArticleDetail: React.FC = () => {
                         <Clock size={14} /> {DateTime.fromISO(article.createdAt).setLocale('id').toFormat('dd LLL yyyy')}
                     </div>
                 </div>
-                <h1 className="text-3xl md:text-6xl font-heading leading-tight tracking-tighter font-lat1">
+                <h1 className="text-3xl md:text-6xl font-heading leading-tight tracking-tighter font-lat1 text-slate-800 dark:text-white">
                     {article.title}
                 </h1>
-                <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+                <div className="flex items-center gap-4 border-t border-border text-slate-900 dark:text-white pt-6">
                     <img 
                         src={article.createdBy?.avatar} 
                         alt={article.createdBy?.name} 
@@ -87,7 +87,7 @@ const ArticleDetail: React.FC = () => {
             </div>
 
             {/* Gambar Utama */}
-            <div className="rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 aspect-video">
+            <div className="rounded-[2.5rem] overflow-hidden shadow-2xl border border-border aspect-video">
                 <img
                     src={article.image}
                     alt={article.title}
@@ -99,7 +99,7 @@ const ArticleDetail: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-8 space-y-8">
                     {article.excerpt && (
-                        <p className="text-xl md:text-2xl font-accent text-white/90 leading-relaxed italic border-l-4 border-primary pl-6 py-2">
+                        <p className="text-xl md:text-2xl font-accent text-slate-900/90 dark:text-white/90 leading-relaxed italic border-l-4 border-primary pl-6 py-2">
                             "{article.excerpt}"
                         </p>
                     )}
@@ -111,15 +111,15 @@ const ArticleDetail: React.FC = () => {
 
                 {/* Sidebar */}
                 <div className="lg:col-span-4 space-y-10">
-                    <div className="bg-white/5 border border-white/10 p-8 rounded-[2rem] space-y-6">
-                        <h4 className="font-heading text-lg uppercase tracking-tight text-white">Rekomendasi</h4>
+                    <div className="border border-border p-8 rounded-[2rem] space-y-6">
+                        <h4 className="font-heading text-lg uppercase tracking-tight text-slate-900 dark:text-white">Rekomendasi</h4>
                         <div className="space-y-6">
                             {recommendedArticles?.map((related: { id: string, title: string, image: string, createdAt: string }) => (
                                 <Link key={related.id} to={`/articles/${related.id}`} className="group block space-y-2">
                                     <div className="aspect-video rounded-xl overflow-hidden mb-3">
                                         <img src={related.image} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="" />
                                     </div>
-                                    <h5 className="font-heading text-sm group-hover:text-primary transition-colors leading-tight text-white/90">{related.title}</h5>
+                                    <h5 className="font-heading text-sm group-hover:text-primary transition-colors leading-tight text-slate-900/90 dark:text-white/90">{related.title}</h5>
                                     <p className="text-[10px] font-accent text-muted-foreground uppercase">
                                         {new Date(related.createdAt).toLocaleDateString()}
                                     </p>
