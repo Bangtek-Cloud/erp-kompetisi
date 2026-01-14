@@ -75,9 +75,10 @@ export default function LandingLayout() {
 
             {/* Mobile/Tablet Top Bar - Solid */}
             <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-card border-b border-border z-50 flex items-center justify-between px-6 shadow-sm">
-                <div className="flex items-center gap-2">
-                    <Trophy className="text-primary" size={20} />
-                    <span className="font-heading text-lg tracking-tighter uppercase">PROTOURNEY</span>
+                <div className="flex items-center gap-3 font-lat1">
+                    <img src="/B-dark.png" className="w-8 h-8 hidden dark:block" />
+                    <img src="/B-light.png" className="w-8 h-8 block dark:hidden" />
+                    Bangtek.
                 </div>
                 <div className='flex items-center gap-2'>
                     <button
