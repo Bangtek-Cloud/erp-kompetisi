@@ -45,6 +45,8 @@ import EventLanding from "@/screen/landing/event";
 import TournamentLanding from "@/screen/landing/tournament";
 import GalleryLanding from "@/screen/landing/gallery";
 import VideosLanding from "@/screen/landing/clip";
+import ArticlesLanding from "@/screen/landing/article";
+import ArticleDetail from "@/screen/landing/detailArticle";
 
 export default function AppRouter() {
     const { user } = useAuthStore();
@@ -60,6 +62,8 @@ export default function AppRouter() {
                     <Route path="tournaments" element={<TournamentLanding />} />
                     <Route path="gallery" element={<GalleryLanding />} />
                     <Route path="videos" element={<VideosLanding />} />
+                    <Route path="articles" element={<ArticlesLanding />} />
+                    <Route path="article/:id" element={<ArticleDetail />} />
                     <Route path="terms" element={<TermsPage />} />
                     <Route path="privacy" element={<PrivacyPage />} />
                     <Route path="*" element={<Navigate to="/" />} />
