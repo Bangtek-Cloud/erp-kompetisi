@@ -6,10 +6,19 @@ import { NewIEvent } from '@/types/event';
 import { Skeleton } from '@/components/ui/skeleton';
 import EventCard from '@/components/event-card';
 import { Button } from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter
+} from "@/components/ui/alert-dialog"
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 const LIMIT = 8;
 
 const EventLanding: React.FC = () => {
+    const [openList, setOpenList] = useState(false)
+    const [dataOpen, setDataOpen] = useState<string[]>([])
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
 
@@ -70,7 +79,7 @@ const EventLanding: React.FC = () => {
                             <Skeleton key={i} className="h-100 w-full rounded-3xl" />
                         ))
                     : events.map((event: NewIEvent) => (
-                        <EventCard key={event.id} event={event} />
+                        <EventCard key={event.id} event={event} setOpenList={setOpenList} setDataOpen={setDataOpen} />
                     ))}
             </div>
 
@@ -107,6 +116,27 @@ const EventLanding: React.FC = () => {
                     </Button>
                 </div>
             )}
+
+            <AlertDialog open={openList} onOpenChange={setOpenList}>
+                <AlertDialogContent>
+                    <ScrollArea className="h-75">
+                        <div className="flex flex-col gap-4 mt-4 overflow-auto h-50">
+                            <div className="flex flex-col gap-2">
+                                <h3 className="text-lg font-bold">Syarat dan ketentuan</h3>
+                                {dataOpen?.map((data, index) => (
+                                    <div className="flex gap-4" key={index}>
+                                        <div key={index}>{data}</div>
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    </ScrollArea>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Tutup</AlertDialogCancel>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

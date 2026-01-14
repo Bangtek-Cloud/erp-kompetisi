@@ -31,6 +31,7 @@ export const getAllTournaments2 = async (param: {
     page: number;
     limit: number;
     search?: string;
+    eventId?: string;
 }
 ) => {
     const query = new URLSearchParams(param as any).toString();

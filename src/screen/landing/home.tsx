@@ -10,8 +10,18 @@ import { getAllArticle } from '@/services/article';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { NewIEvent } from '@/types/event';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter
+} from "@/components/ui/alert-dialog"
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+
 
 export default function LandingHome() {
+  const [openList, setOpenList] = useState(false)
+  const [dataOpen, setDataOpen] = useState<string[]>([])
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   // Queries
@@ -26,12 +36,12 @@ export default function LandingHome() {
   });
 
   const { data: clipVideo, isLoading: clipLoading } = useQuery({
-    queryKey: ['clipVideo'],
+    queryKey: ['clipVideo-3'],
     queryFn: () => getAllClip({ page: 1, limit: 3 })
   });
 
   const { data: articleData, isLoading: articleLoading } = useQuery({
-    queryKey: ['articles'],
+    queryKey: ['articles-2'],
     queryFn: () => getAllArticle({ page: 1, limit: 2 })
   });
 
@@ -141,7 +151,7 @@ export default function LandingHome() {
             ))
           ) : (
             events?.data?.map((event: NewIEvent) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} setDataOpen={setDataOpen} setOpenList={setOpenList} />
             ))
           )}
         </div>
@@ -229,7 +239,7 @@ export default function LandingHome() {
                       </Avatar>
                       <span className="text-[10px] font-accent text-muted-foreground uppercase font-bold tracking-wider">{item?.createdBy?.name || 'Admin'}</span>
                     </div>
-                    <Link to={`/articles/${item.id}`} className="text-primary font-heading text-[10px] tracking-widest uppercase hover:underline underline-offset-8 decoration-2">
+                    <Link to={`/article/${item.id}`} className="text-primary font-heading text-[10px] tracking-widest uppercase hover:underline underline-offset-8 decoration-2">
                       FULL ARTICLE
                     </Link>
                   </div>
@@ -262,6 +272,27 @@ export default function LandingHome() {
           <div className="absolute inset-0 -z-10" onClick={() => setSelectedVideo(null)}></div>
         </div>
       )}
+
+      <AlertDialog open={openList} onOpenChange={setOpenList}>
+        <AlertDialogContent>
+          <ScrollArea className="h-75">
+            <div className="flex flex-col gap-4 mt-4 overflow-auto h-50">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-lg font-bold">Syarat dan ketentuan</h3>
+                {dataOpen?.map((data, index) => (
+                  <div className="flex gap-4" key={index}>
+                    <div key={index}>{data}</div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </ScrollArea>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Tutup</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
